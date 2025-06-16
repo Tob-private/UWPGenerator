@@ -28,6 +28,7 @@
         public required int Starport { get; set; }
         public required List<string> StarportBases { get; set; }
         public required int TechLevel { get; set; }
+        public required string TravelCode { get; set; }
 
         public override string ToString()
         {
@@ -38,13 +39,15 @@ Atmosphere: {Atmosphere}
 Hydrographics: {Hydrographics}
 Population: {Population}
 Government: {Government}
+Factions: 
+{string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}
 Culture: {Culture}
 Law Level: {LawLevel}
 Starport: {Starport}
 Starport Bases: {string.Join("; ", StarportBases.Select(f => f.ToString()))}
 Tech Level: {TechLevel}
-Factions: 
-{string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}
+Travel Code: {TravelCode}
+
 ";
         }
 
@@ -485,6 +488,7 @@ Factions:
                 Starport = starport,
                 StarportBases = starportBases,
                 TechLevel = techLevel,
+                TravelCode = travelCode,
             };
 
             return world;
