@@ -1,4 +1,6 @@
-﻿namespace UWPGenerator
+﻿using System.Text.Json;
+
+namespace UWPGenerator
 {
 
     public class Faction
@@ -70,7 +72,32 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             return total;
         }
 
-        // Define return value
+        private static string RandomizePlanetName()
+        {
+            {
+                // Read JSON file content
+                string json = File.ReadAllText("./assets/planet-names.json");
+
+                // Deserialize JSON array into a List<string>
+                List<string>? planets = JsonSerializer.Deserialize<List<string>>(json);
+
+                if (planets == null || planets.Count == 0)
+                {
+                    Console.WriteLine("No planets loaded.");
+                    return "no planet names available";
+                }
+
+                // Initialize Random
+                Random random = new Random();
+
+                // Pick a random planet
+                string randomPlanet = planets[random.Next(planets.Count)];
+
+                // Output the result
+                return randomPlanet;
+            }
+
+        }
         public static World GenerateWorld()
         {
             Console.WriteLine("=====================================================");
@@ -78,6 +105,10 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             Console.WriteLine("======  Welcome to the MgT 2e world generator  ======");
             Console.WriteLine("=====================================================");
             Console.WriteLine("=====================================================");
+
+            // Give planet a name
+            string planetName = RandomizePlanetName();
+
             // Calculate planet size
             int size = RollDice(6, 2) - 2;
             size = Math.Min(10, Math.Max(0, size));
@@ -97,7 +128,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
 
 
             // Calculate planet hydrographics
-            int hydrographicsMod = 0, hydrographics = 0;
+            int hydrographicsMod = 0, hydrographics;
 
             // If it DOESN'T have a D-type, or F-type "Panthalassic", consider temperature for the modifier
             int temperatureMod = -1, temperature = -1;
@@ -545,18 +576,33 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 tradeCodes.Add("Wa");
             }
 
+            string starportClass = "";
+            if (starport <= 2)
+            {
+                starportClass = "X";
+            }
+            else if (starport <= 4)
+            {
+                starportClass = "E";
+            }
+            else if (starport <= 6)
+            {
+                starportClass = "D";
+            }
+            else if (starport <= 8)
+            {
+                starportClass = "C";
+            }
+            else if (starport <= 10)
+            {
+                starportClass = "B";
+            }
+            else if (starport >= 11)
+            {
+                starportClass = "A";
+            }
 
-
-
-
-
-
-
-
-
-
-
-            string UWPString = "";
+            string UWPString = $"{planetName}   0101    {starportClass}{size:X}{atmosphere:X}{hydrographics:X}{population:X}{government:X}{lawLevel:X}-{techLevel:X}    {string.Join(" ", starportBases.Select(f => f.ToString()[..1]))}   {string.Join("; ", tradeCodes.Select(f => f.ToString()))}    {char.ToUpper(travelCode[0])}";
 
             World world = new()
             {
