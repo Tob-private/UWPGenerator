@@ -602,7 +602,19 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 starportClass = "A";
             }
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size:X}{atmosphere:X}{hydrographics:X}{population:X}{government:X}{lawLevel:X}-{techLevel:X}    {string.Join(" ", starportBases.Select(f => f.ToString()[..1]))}   {string.Join("; ", tradeCodes.Select(f => f.ToString()))}    {char.ToUpper(travelCode[0])}";
+            // Get first letter of each base (e.g., "N A R")
+            string UWPBases = string.Join(" ", starportBases.Select(f => f.ToString()[..1]));
+
+            // Join trade codes with semicolons (e.g., "Ag; Ri; Hi")
+            string UWPTradeCodes = string.Join(" ", tradeCodes.Select(f => f.ToString()));
+
+            // Capitalize first letter of travelCode (e.g., "A")
+            string UWPTravelCode = !string.IsNullOrEmpty(travelCode)
+                ? char.ToUpper(travelCode[0]).ToString()
+                : "";
+
+
+            string UWPString = $"{planetName}   0101    {starportClass}{size:X}{atmosphere:X}{hydrographics:X}{population:X}{government:X}{lawLevel:X}-{techLevel:X}    {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {
