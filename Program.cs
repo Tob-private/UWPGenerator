@@ -29,6 +29,7 @@
         public required List<string> StarportBases { get; set; }
         public required int TechLevel { get; set; }
         public required string TravelCode { get; set; }
+        public required List<string> TradeCodes { get; set; }
 
         public override string ToString()
         {
@@ -47,6 +48,7 @@ Starport: {Starport}
 Starport Bases: {string.Join("; ", StarportBases.Select(f => f.ToString()))}
 Tech Level: {TechLevel}
 Travel Code: {TravelCode}
+Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
 
 ";
         }
@@ -445,6 +447,10 @@ Travel Code: {TravelCode}
             // Calculate travel codes
             string travelCode = "", travelCodesPrompt = "";
 
+            if (atmosphere >= 10 && (government == 0 || government == 7 || government == 10) && (lawLevel == 0 || lawLevel >= 9))
+            {
+                Console.WriteLine("Your world has relatively extreme characteristics. Consider it for Amber travel code status");
+            }
             do
             {
                 Console.Write("Would you like there do be a travel code? (y/n) --- ");
@@ -462,6 +468,84 @@ Travel Code: {TravelCode}
                     Console.WriteLine("");
                 } while (travelCode != "amber" && travelCode != "red");
             }
+
+            // Calculate trade codes
+            List<string> tradeCodes = new List<string>();
+
+            if (atmosphere >= 4 && atmosphere <= 9 && hydrographics >= 4 && hydrographics <= 8 && population >= 5 && population <= 7) // Agricultural
+            {
+                tradeCodes.Add("Ag");
+            }
+            if (size == 0 && atmosphere == 0 && hydrographics == 0) // Asteroid
+            {
+                tradeCodes.Add("As");
+            }
+            if (population == 0 && government == 0 && lawLevel == 0) // Barren
+            {
+                tradeCodes.Add("Ba");
+            }
+            if (atmosphere >= 2 && hydrographics == 0) // Desert
+            {
+                tradeCodes.Add("De");
+            }
+            if (size >= 10 && hydrographics >= 1) // Fluid Oceans
+            {
+                tradeCodes.Add("Fl");
+            }
+            if (size >= 6 && size <= 8 && (atmosphere == 5 || atmosphere == 6 || atmosphere == 8) && (hydrographics == 5 || hydrographics == 6 || hydrographics == 7)) // Garden
+            {
+                tradeCodes.Add("Ga");
+            }
+            if (population >= 9) // High Population
+            {
+                tradeCodes.Add("Hi");
+            }
+            if (techLevel >= 12) // High Tech
+            {
+                tradeCodes.Add("Ht");
+            }
+            if ((atmosphere == 0 || atmosphere == 1) && hydrographics >= 1) // Ice-Capped
+            {
+                tradeCodes.Add("Ic");
+            }
+            if ((size >= 0 && size <= 2 || size == 4 || size == 7 || size == 9) && population >= 9) // Industrial
+            {
+                tradeCodes.Add("In");
+            }
+            if (population <= 3) // Low Population
+            {
+                tradeCodes.Add("Lo");
+            }
+            if (techLevel <= 5) // Low Tech
+            {
+                tradeCodes.Add("Lt");
+            }
+            if (atmosphere >= 0 && atmosphere <= 3 && hydrographics >= 0 && hydrographics <= 3 && population >= 6) // Non-Agricultural
+            {
+                tradeCodes.Add("Na");
+            }
+            if (population >= 0 && population <= 6 && government >= 0 && government <= 6) // Non-Industrial
+            {
+                tradeCodes.Add("NI");
+            }
+            if (size >= 2 && size <= 5 && atmosphere >= 0 && atmosphere <= 3 && hydrographics >= 0 && hydrographics <= 3) // Poor
+            {
+                tradeCodes.Add("Po");
+            }
+            if ((atmosphere == 6 || atmosphere == 8) && population >= 6 && population <= 8 && government >= 4 && government <= 9) // Rich
+            {
+                tradeCodes.Add("Ri");
+            }
+            if (atmosphere == 0) // Vacuum
+            {
+                tradeCodes.Add("Va");
+            }
+            if (hydrographics >= 10) // Water World
+            {
+                tradeCodes.Add("Wa");
+            }
+
+
 
 
 
@@ -489,6 +573,7 @@ Travel Code: {TravelCode}
                 StarportBases = starportBases,
                 TechLevel = techLevel,
                 TravelCode = travelCode,
+                TradeCodes = tradeCodes,
             };
 
             return world;
