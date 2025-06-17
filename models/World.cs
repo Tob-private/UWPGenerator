@@ -9,8 +9,24 @@ namespace UWPGenerator.models
 
         public override string ToString()
         {
-            return $"- SizeClass: {SizeClass}, Diameter: {Diameter}, Gravity: {Gravity}";
+            return $"- Size Class: {SizeClass}, Diameter: {Diameter}, Gravity: {Gravity}";
         }
+    }
+    public class AtmosphereModel
+    {
+        public required string Class { get; set; }
+        public required int Number { get; set; }
+        public required string Composition { get; set; }
+        public required string PressureATM { get; set; }
+        public required string GearRequired { get; set; }
+        public required string? UnusualAtmosphereType { get; set; }
+
+        public override string ToString()
+        {
+            return $"- Class: {Class}, Number: {Number}, Composition: {Composition}, Pressure: {PressureATM} atm, Gear Required: {GearRequired}"
+                 + (string.IsNullOrWhiteSpace(UnusualAtmosphereType) ? "" : $", Unusual Atmosphere Type: {UnusualAtmosphereType}");
+        }
+
     }
     public class Faction
     {
@@ -29,7 +45,7 @@ namespace UWPGenerator.models
     {
         public required string UWPString { get; set; } = "";
         public required SizeModel Size { get; set; }
-        public required int Atmosphere { get; set; }
+        public required AtmosphereModel Atmosphere { get; set; }
         public required int Hydrographics { get; set; }
         public required int Population { get; set; }
         public required int Government { get; set; }
@@ -47,8 +63,9 @@ namespace UWPGenerator.models
             return $@"
 UWP String: {UWPString}
 Size:
-{ Size.ToString() }
-Atmosphere: {Atmosphere}
+{Size}
+Atmosphere: 
+{Atmosphere}
 Hydrographics: {Hydrographics}
 Population: {Population}
 Government: {Government}
