@@ -5,7 +5,7 @@ namespace UWPGenerator.models
         public required string UWPString { get; set; } = "";
         public required SizeModel Size { get; set; }
         public required AtmosphereModel Atmosphere { get; set; }
-        public required int Hydrographics { get; set; }
+        public required HydroGraphicsModel Hydrographics { get; set; }
         public required int Population { get; set; }
         public required int Government { get; set; }
         public required List<Faction> Factions { get; set; }
@@ -25,7 +25,8 @@ Size:
 {Size}
 Atmosphere: 
 {Atmosphere}
-Hydrographics: {Hydrographics}
+Hydrographics: 
+{Hydrographics}
 Population: {Population}
 Government: {Government}
 Factions: 

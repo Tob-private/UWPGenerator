@@ -20,45 +20,12 @@ namespace UWPGenerator
 
             // Calculate planet atmosphere
             AtmosphereModel atmosphere = Characteristics.Atmosphere(size.SizeNumber);
-            // Calculate planet hydrographics
-            int hydrographicsMod = 0, hydrographics = 0;
 
+            // Calculate planet hydrographics
             // If it DOESN'T have a D-type, or F-type "Panthalassic", consider temperature for the modifier
             TemperatureModel temperature = Characteristics.Temperature(atmosphere.Number);
 
-            if (atmosphere.Number != 13 || atmosphere.UnusualAtmosphereType != "PANTHALASSIC")
-            {
-
-            }
-
-            // Generate temperature, then apply corresponding DM to hydrographics roll 
-            if (temperature.Number != -1)
-            {
-                if (temperature.Number == 10 || temperature.Number == 11)
-                {
-                    hydrographicsMod += -2;
-                }
-                else if (temperature.Number >= 12)
-                {
-                    hydrographicsMod += -6;
-                }
-            }
-
-            if (size.SizeNumber < 2)
-            {
-                hydrographics = 0;
-            }
-            else if (atmosphere.Number < 2 || (atmosphere.Number > 9 && atmosphere.Number < 13))
-            {
-                hydrographicsMod += -4;
-                hydrographics = Services.RollDice(6, 2) - 7 + hydrographicsMod;
-            }
-            else
-            {
-                hydrographics = Services.RollDice(6, 2) - 7 + atmosphere.Number;
-            }
-            hydrographics = Math.Min(10, Math.Max(0, hydrographics));
-
+            HydroGraphicsModel hydrographics = Characteristics.HydroGraphics(size.SizeNumber, atmosphere.Number, atmosphere.UnusualAtmosphereType, temperature.Number);
 
             // Calculate planet population
             int population = Services.RollDice(6, 2) - 2;
@@ -276,7 +243,7 @@ namespace UWPGenerator
                     break;
             }
 
-            switch (hydrographics)
+            switch (hydrographics.Number)
             {
                 case 0:
                 case 9:
@@ -357,11 +324,11 @@ namespace UWPGenerator
             // Calculate trade codes
             List<string> tradeCodes = new List<string>();
 
-            if (atmosphere.Number >= 4 && atmosphere.Number <= 9 && hydrographics >= 4 && hydrographics <= 8 && population >= 5 && population <= 7) // Agricultural
+            if (atmosphere.Number >= 4 && atmosphere.Number <= 9 && hydrographics.Number >= 4 && hydrographics.Number <= 8 && population >= 5 && population <= 7) // Agricultural
             {
                 tradeCodes.Add("Ag");
             }
-            if (size.SizeNumber == 0 && atmosphere.Number == 0 && hydrographics == 0) // Asteroid
+            if (size.SizeNumber == 0 && atmosphere.Number == 0 && hydrographics.Number == 0) // Asteroid
             {
                 tradeCodes.Add("As");
             }
@@ -369,15 +336,15 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Ba");
             }
-            if (atmosphere.Number >= 2 && hydrographics == 0) // Desert
+            if (atmosphere.Number >= 2 && hydrographics.Number == 0) // Desert
             {
                 tradeCodes.Add("De");
             }
-            if (size.SizeNumber >= 10 && hydrographics >= 1) // Fluid Oceans
+            if (size.SizeNumber >= 10 && hydrographics.Number >= 1) // Fluid Oceans
             {
                 tradeCodes.Add("Fl");
             }
-            if (size.SizeNumber >= 6 && size.SizeNumber <= 8 && (atmosphere.Number == 5 || atmosphere.Number == 6 || atmosphere.Number == 8) && (hydrographics == 5 || hydrographics == 6 || hydrographics == 7)) // Garden
+            if (size.SizeNumber >= 6 && size.SizeNumber <= 8 && (atmosphere.Number == 5 || atmosphere.Number == 6 || atmosphere.Number == 8) && (hydrographics.Number == 5 || hydrographics.Number == 6 || hydrographics.Number == 7)) // Garden
             {
                 tradeCodes.Add("Ga");
             }
@@ -389,7 +356,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Ht");
             }
-            if ((atmosphere.Number == 0 || atmosphere.Number == 1) && hydrographics >= 1) // Ice-Capped
+            if ((atmosphere.Number == 0 || atmosphere.Number == 1) && hydrographics.Number >= 1) // Ice-Capped
             {
                 tradeCodes.Add("Ic");
             }
@@ -405,7 +372,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Lt");
             }
-            if (atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics >= 0 && hydrographics <= 3 && population >= 6) // Non-Agricultural
+            if (atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics.Number >= 0 && hydrographics.Number <= 3 && population >= 6) // Non-Agricultural
             {
                 tradeCodes.Add("Na");
             }
@@ -413,7 +380,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("NI");
             }
-            if (size.SizeNumber >= 2 && size.SizeNumber <= 5 && atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics >= 0 && hydrographics <= 3) // Poor
+            if (size.SizeNumber >= 2 && size.SizeNumber <= 5 && atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics.Number >= 0 && hydrographics.Number <= 3) // Poor
             {
                 tradeCodes.Add("Po");
             }
@@ -425,7 +392,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Va");
             }
-            if (hydrographics >= 10) // Water World
+            if (hydrographics.Number >= 10) // Water World
             {
                 tradeCodes.Add("Wa");
             }
@@ -468,7 +435,7 @@ namespace UWPGenerator
                 : "";
 
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size.SizeClass}{atmosphere.Class}{hydrographics:X}{population:X}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}   0101    {starportClass}{size.SizeClass}{atmosphere.Class}{hydrographics.Class}{population:X}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {

@@ -217,7 +217,6 @@ namespace UWPGenerator
 
             return atmosphere;
         }
-
         public static TemperatureModel Temperature(int atmosphere)
         {
             if (atmosphere >= 15)
@@ -263,7 +262,7 @@ namespace UWPGenerator
                     throw new Exception("Couldn't set temperature modifier");
             }
 
-            // Generate temperature, then apply corresponding DM to hydrographics roll 
+            // Generate temperature, then apply corresponding DM to hydrographicsNumber roll 
             if (temperatureNumber == -1)
             {
                 if (temperatureMod == -1)
@@ -319,5 +318,97 @@ namespace UWPGenerator
 
             return temperature;
         }
+        public static HydroGraphicsModel HydroGraphics(int size, int atmosphere, string? atmosphereType, int temperature)
+        {
+            int hydrographicsMod = 0, hydrographicsNumber;
+            string percentage, description;
+
+            if (atmosphere != 13 || atmosphereType != "PANTHALASSIC")
+            {
+                if (temperature == 10 || temperature == 11)
+                {
+                    hydrographicsMod += -2;
+                }
+                else if (temperature >= 12)
+                {
+                    hydrographicsMod += -6;
+                }
+            }
+            if (size < 2)
+            {
+                hydrographicsNumber = 0;
+            }
+            else if (atmosphere < 2 || (atmosphere > 9 && atmosphere < 13))
+            {
+                hydrographicsMod += -4;
+                hydrographicsNumber = Services.RollDice(6, 2) - 7 + hydrographicsMod + atmosphere;
+            }
+            else
+            {
+                hydrographicsNumber = Services.RollDice(6, 2) - 7 + hydrographicsMod + atmosphere;
+            }
+            hydrographicsNumber = Math.Min(10, Math.Max(0, hydrographicsNumber));
+
+            switch (hydrographicsNumber)
+            {
+                case 0:
+                    percentage = $"{random.Next(0, 5)}%";
+                    description = "Desert world";
+                    break;
+                case 1:
+                    percentage = $"{random.Next(6, 15)}%";
+                    description = "Dry world";
+                    break;
+                case 2:
+                    percentage = $"{random.Next(16, 25)}%";
+                    description = "A few small seas.";
+                    break;
+                case 3:
+                    percentage = $"{random.Next(26, 35)}%";
+                    description = "Small seas and oceans";
+                    break;
+                case 4:
+                    percentage = $"{random.Next(36, 45)}%";
+                    description = "Wet world";
+                    break;
+                case 5:
+                    percentage = $"{random.Next(46, 55)}%";
+                    description = "Large oceans";
+                    break;
+                case 6:
+                    percentage = $"{random.Next(56, 65)}%";
+                    description = "";
+                    break;
+                case 7:
+                    percentage = $"{random.Next(66, 75)}%";
+                    description = "Earth-like world";
+                    break;
+                case 8:
+                    percentage = $"{random.Next(76, 85)}%";
+                    description = "Water world";
+                    break;
+                case 9:
+                    percentage = $"{random.Next(86, 95)}%";
+                    description = "Only a few small islands and archipelagos";
+                    break;
+                case 10:
+                    percentage = $"{random.Next(96, 100)}%";
+                    description = "Almost entirely water";
+                    break;
+                default:
+                    throw new Exception("Couldn't set hydrographics");
+            }
+
+            HydroGraphicsModel hydrographics = new()
+            {
+                Class = $"{hydrographicsNumber:x}",
+                Number = hydrographicsNumber,
+                Percentage = percentage,
+                Description = description,
+            };
+
+            return hydrographics;
+        }
     }
+
 }
