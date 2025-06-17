@@ -19,13 +19,13 @@ namespace UWPGenerator
             SizeModel size = Characteristics.Size();
 
             // Calculate planet atmosphere
-            AtmosphereModel atmosphere = Characteristics.Atmosphere(size.SizeNumber);
+            AtmosphereModel atmosphere = Characteristics.Atmosphere(size.Number);
 
             // Calculate planet hydrographics
             // If it DOESN'T have a D-type, or F-type "Panthalassic", consider temperature for the modifier
             TemperatureModel temperature = Characteristics.Temperature(atmosphere.Number);
 
-            HydroGraphicsModel hydrographics = Characteristics.HydroGraphics(size.SizeNumber, atmosphere.Number, atmosphere.UnusualAtmosphereType, temperature.Number);
+            HydroGraphicsModel hydrographics = Characteristics.HydroGraphics(size.Number, atmosphere.Number, atmosphere.UnusualAtmosphereType, temperature.Number);
 
             // Calculate planet population
             int population = Services.RollDice(6, 2) - 2;
@@ -210,7 +210,7 @@ namespace UWPGenerator
                     break;
             }
 
-            switch (size.SizeNumber)
+            switch (size.Number)
             {
                 case 0:
                 case 1:
@@ -328,7 +328,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Ag");
             }
-            if (size.SizeNumber == 0 && atmosphere.Number == 0 && hydrographics.Number == 0) // Asteroid
+            if (size.Number == 0 && atmosphere.Number == 0 && hydrographics.Number == 0) // Asteroid
             {
                 tradeCodes.Add("As");
             }
@@ -340,11 +340,11 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("De");
             }
-            if (size.SizeNumber >= 10 && hydrographics.Number >= 1) // Fluid Oceans
+            if (size.Number >= 10 && hydrographics.Number >= 1) // Fluid Oceans
             {
                 tradeCodes.Add("Fl");
             }
-            if (size.SizeNumber >= 6 && size.SizeNumber <= 8 && (atmosphere.Number == 5 || atmosphere.Number == 6 || atmosphere.Number == 8) && (hydrographics.Number == 5 || hydrographics.Number == 6 || hydrographics.Number == 7)) // Garden
+            if (size.Number >= 6 && size.Number <= 8 && (atmosphere.Number == 5 || atmosphere.Number == 6 || atmosphere.Number == 8) && (hydrographics.Number == 5 || hydrographics.Number == 6 || hydrographics.Number == 7)) // Garden
             {
                 tradeCodes.Add("Ga");
             }
@@ -360,7 +360,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Ic");
             }
-            if ((size.SizeNumber >= 0 && size.SizeNumber <= 2 || size.SizeNumber == 4 || size.SizeNumber == 7 || size.SizeNumber == 9) && population >= 9) // Industrial
+            if ((size.Number >= 0 && size.Number <= 2 || size.Number == 4 || size.Number == 7 || size.Number == 9) && population >= 9) // Industrial
             {
                 tradeCodes.Add("In");
             }
@@ -380,7 +380,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("NI");
             }
-            if (size.SizeNumber >= 2 && size.SizeNumber <= 5 && atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics.Number >= 0 && hydrographics.Number <= 3) // Poor
+            if (size.Number >= 2 && size.Number <= 5 && atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics.Number >= 0 && hydrographics.Number <= 3) // Poor
             {
                 tradeCodes.Add("Po");
             }
@@ -435,7 +435,7 @@ namespace UWPGenerator
                 : "";
 
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size.SizeClass}{atmosphere.Class}{hydrographics.Class}{population:X}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}   0101    {starportClass}{size.Class}{atmosphere.Class}{hydrographics.Class}{population:X}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {

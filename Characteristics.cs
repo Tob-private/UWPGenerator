@@ -77,8 +77,8 @@ namespace UWPGenerator
 
             SizeModel size = new()
             {
-                SizeClass = sizeClass,
-                SizeNumber = sizeNumber,
+                Class = sizeClass,
+                Number = sizeNumber,
                 Diameter = diameter,
                 Gravity = gravity,
             };
