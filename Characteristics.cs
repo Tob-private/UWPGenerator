@@ -217,6 +217,107 @@ namespace UWPGenerator
 
             return atmosphere;
         }
-    }
 
+        public static TemperatureModel Temperature(int atmosphere)
+        {
+            if (atmosphere >= 15)
+            {
+                Console.WriteLine("⚠️ WARNING: Unusual atmosphere detected.");
+            }
+            int temperatureMod = -1, temperatureNumber = -1;
+            string type = "", avgTemp = "", description = "";
+
+            switch (atmosphere)
+            {
+                case 0:
+                case 1:
+                    temperatureNumber = 0;
+                    break;
+                case 2:
+                case 3:
+                    temperatureMod = -2;
+                    break;
+                case 4:
+                case 5:
+                case 14:
+                    temperatureMod = -1;
+                    break;
+                case 6:
+                case 7:
+                    temperatureMod = 0;
+                    break;
+                case 8:
+                case 9:
+                    temperatureMod = 1;
+                    break;
+                case 10:
+                case 13:
+                case 15:
+                    temperatureMod = 2;
+                    break;
+                case 11:
+                case 12:
+                    temperatureMod = 6;
+                    break;
+                default:
+                    throw new Exception("Couldn't set temperature modifier");
+            }
+
+            // Generate temperature, then apply corresponding DM to hydrographics roll 
+            if (temperatureNumber == -1)
+            {
+                if (temperatureMod == -1)
+                {
+                    temperatureMod = 0;
+                }
+                temperatureNumber = Services.RollDice(6, 2) + temperatureMod;
+                _ = Math.Min(20, Math.Max(0, temperatureNumber));
+            }
+
+            switch (temperatureNumber)
+            {
+                case 0:
+                case 1:
+                case 2:
+                    type = "Frozen";
+                    avgTemp = "-51° or less";
+                    description = "Frozen world. No liquid water, very dry atmosphere";
+                    break;
+                case 3:
+                case 4:
+                    type = "Cold";
+                    avgTemp = "-51° to 0°";
+                    description = "Icy world. Little liquid water, extensive ice caps, few clouds";
+                    break;
+                case int t when t >= 5 && t <= 9:
+                    type = "Temperate";
+                    avgTemp = "0° to 30°";
+                    description = "Temperate world. Earth-like. Liquid & vaporised water are common, moderate ice caps.";
+                    break;
+                case 10:
+                case 11:
+                    type = "Hot";
+                    avgTemp = "31° to 80°";
+                    description = "Hot world. Small or no ice caps, little liquid water. Most water in the form of clouds";
+                    break;
+                case >= 12:
+                    type = "Hot";
+                    avgTemp = "31° to 80°";
+                    description = "Hot world. Small or no ice caps, little liquid water. Most water in the form of clouds";
+                    break;
+                default:
+                    throw new Exception("Couldn't set temperature");
+            }
+
+            TemperatureModel temperature = new()
+            {
+                Number = temperatureNumber,
+                Type = type,
+                AvgTemp = avgTemp,
+                Description = description,
+            };
+
+            return temperature;
+        }
+    }
 }

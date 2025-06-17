@@ -21,69 +21,29 @@ namespace UWPGenerator
             // Calculate planet atmosphere
             AtmosphereModel atmosphere = Characteristics.Atmosphere(size.SizeNumber);
             // Calculate planet hydrographics
-            int hydrographicsMod = 0, hydrographics;
+            int hydrographicsMod = 0, hydrographics = 0;
 
             // If it DOESN'T have a D-type, or F-type "Panthalassic", consider temperature for the modifier
-            int temperatureMod = -1, temperature = -1;
+            TemperatureModel temperature = Characteristics.Temperature(atmosphere.Number);
 
             if (atmosphere.Number != 13 || atmosphere.UnusualAtmosphereType != "PANTHALASSIC")
             {
-                switch (atmosphere.Number)
+
+            }
+
+            // Generate temperature, then apply corresponding DM to hydrographics roll 
+            if (temperature.Number != -1)
+            {
+                if (temperature.Number == 10 || temperature.Number == 11)
                 {
-                    case 0:
-                    case 1:
-                        temperature = 0;
-                        break;
-                    case 2:
-                    case 3:
-                        temperatureMod = -2;
-                        break;
-                    case 4:
-                    case 5:
-                    case 14:
-                        temperatureMod = -1;
-                        break;
-                    case 6:
-                    case 7:
-                        temperatureMod = 0;
-                        break;
-                    case 8:
-                    case 9:
-                        temperatureMod = 1;
-                        break;
-                    case 10:
-                    case 13:
-                    case 15:
-                        temperatureMod = 2;
-                        break;
-                    case 11:
-                    case 12:
-                        temperatureMod = 6;
-                        break;
-                    default:
-                        throw new Exception("Couldn't set temperature modifier");
+                    hydrographicsMod += -2;
                 }
-
-                // Generate temperature, then apply corresponding DM to hydrographics roll 
-                if (temperature != -1)
+                else if (temperature.Number >= 12)
                 {
-                    if (temperatureMod == -1)
-                    {
-                        temperatureMod = 0;
-                    }
-                    temperature = Services.RollDice(6, 2) + temperatureMod;
-                    temperature = Math.Min(20, Math.Max(0, temperature));
-
-                    if (temperature == 10 || temperature == 11)
-                    {
-                        hydrographicsMod += -2;
-                    }
-                    else if (temperature >= 12)
-                    {
-                        hydrographicsMod += -6;
-                    }
+                    hydrographicsMod += -6;
                 }
             }
+
             if (size.SizeNumber < 2)
             {
                 hydrographics = 0;
