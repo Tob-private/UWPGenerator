@@ -1,103 +1,9 @@
-﻿using System.Text.Json;
+﻿using UWPGenerator.models;
 
 namespace UWPGenerator
 {
-
-    public class Faction
-    {
-        public int Government { get; set; }
-        public int StrengthNumber { get; set; }
-        public string StrengthDesc { get; set; } = "";
-
-        public override string ToString()
-        {
-            return $"- Government: {Government}, Strength: {StrengthNumber} ({StrengthDesc})";
-        }
-
-    }
-
-    public class World
-    {
-        public required string UWPString { get; set; } = "";
-        public required int Size { get; set; }
-        public required int Atmosphere { get; set; }
-        public required int Hydrographics { get; set; }
-        public required int Population { get; set; }
-        public required int Government { get; set; }
-        public required List<Faction> Factions { get; set; }
-        public required int Culture { get; set; }
-        public required int LawLevel { get; set; }
-        public required int Starport { get; set; }
-        public required List<string> StarportBases { get; set; }
-        public required int TechLevel { get; set; }
-        public required string TravelCode { get; set; }
-        public required List<string> TradeCodes { get; set; }
-
-        public override string ToString()
-        {
-            return $@"
-UWP String: {UWPString}
-Size: {Size}
-Atmosphere: {Atmosphere}
-Hydrographics: {Hydrographics}
-Population: {Population}
-Government: {Government}
-Factions: 
-{string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}
-Culture: {Culture}
-Law Level: {LawLevel}
-Starport: {Starport}
-Starport Bases: {string.Join("; ", StarportBases.Select(f => f.ToString()))}
-Tech Level: {TechLevel}
-Travel Code: {TravelCode}
-Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
-
-";
-        }
-
-    }
-
     class GenerateUWP
     {
-
-        private static Random random = new Random();
-
-        private static int RollDice(int sides = 6, int times = 1)
-        {
-            int total = 0;
-            for (int i = 0; i < times; i++)
-            {
-                total += random.Next(1, sides + 1);
-            }
-            return total;
-        }
-
-        private static string RandomizePlanetName()
-        {
-            {
-                // Read JSON file content
-                string json = File.ReadAllText("./assets/planet-names.json");
-
-                // Deserialize JSON array into a List<string>
-                List<string>? planets = JsonSerializer.Deserialize<List<string>>(json);
-
-                if (planets == null || planets.Count == 0)
-                {
-                    Console.WriteLine("No planets loaded.");
-                    return "no planet names available";
-                }
-
-                // Initialize Random
-                Random random = new Random();
-
-                // Pick a random planet
-                string randomPlanet = planets[random.Next(planets.Count)];
-
-                // Output the result
-                return randomPlanet;
-            }
-
-        }
         public static World GenerateWorld()
         {
             Console.WriteLine("=====================================================");
@@ -107,16 +13,14 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             Console.WriteLine("=====================================================");
 
             // Give planet a name
-            string planetName = RandomizePlanetName();
+            string planetName = Services.RandomizePlanetName();
 
             // Calculate planet size
-            int size = RollDice(6, 2) - 2;
-            size = Math.Min(10, Math.Max(0, size));
-
+            SizeModel size = Characteristics.Size();
 
             // Calculate planet atmosphere
-            int atmosphere = RollDice(6, 2) - 7 + size;
-            atmosphere = Math.Min(10, Math.Max(0, atmosphere));
+            int atmosphere = Services.RollDice(6, 2) - 7 + size.SizeNumber;
+
             string unusualAtmosphereType = "";
             if (atmosphere == 15)
             {
@@ -125,8 +29,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 unusualAtmosphereType = unusualAtmosphereType.ToUpper();
             }
 
-
-
+            atmosphere = Math.Min(10, Math.Max(0, atmosphere));
             // Calculate planet hydrographics
             int hydrographicsMod = 0, hydrographics;
 
@@ -178,7 +81,8 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     {
                         temperatureMod = 0;
                     }
-                    temperature = RollDice(6, 2) + temperatureMod;
+                    temperature = Services.RollDice(6, 2) + temperatureMod;
+                    temperature = Math.Min(20, Math.Max(0, temperature));
 
                     if (temperature == 10 || temperature == 11)
                     {
@@ -190,28 +94,28 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     }
                 }
             }
-            if (size < 2)
+            if (size.SizeNumber < 2)
             {
                 hydrographics = 0;
             }
             else if (atmosphere < 2 || (atmosphere > 9 && atmosphere < 13))
             {
                 hydrographicsMod += -4;
-                hydrographics = RollDice(6, 2) - 7 + hydrographicsMod;
-                hydrographics = Math.Min(10, Math.Max(0, hydrographics));
+                hydrographics = Services.RollDice(6, 2) - 7 + hydrographicsMod;
             }
             else
             {
-                hydrographics = RollDice(6, 2) - 7 + atmosphere;
-                hydrographics = Math.Min(10, Math.Max(0, hydrographics));
-
+                hydrographics = Services.RollDice(6, 2) - 7 + atmosphere;
             }
+            hydrographics = Math.Min(10, Math.Max(0, hydrographics));
+
 
             // Calculate planet population
-            int population = RollDice(6, 2) - 2;
+            int population = Services.RollDice(6, 2) - 2;
 
             // Calculate planet government
-            int government = RollDice(6, 2) - 7 + population;
+            int government = Services.RollDice(6, 2) - 7 + population;
+            government = Math.Min(10, Math.Max(0, government));
 
             // Generate factions
             List<Faction> factions = new List<Faction>();
@@ -231,12 +135,12 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 factionsAmountMod = 0;
             }
 
-            int factionsAmount = RollDice(3) - factionsAmountMod;
+            int factionsAmount = Services.RollDice(3) - factionsAmountMod;
 
             for (int i = 0; i < factionsAmount; i++)
             {
-                int factionGovernment = RollDice(6, 2);
-                int factionStrengthNumber = RollDice(6, 2);
+                int factionGovernment = Services.RollDice(6, 2);
+                int factionStrengthNumber = Services.RollDice(6, 2);
                 string factionStrengthDesc = "";
 
                 factionStrengthDesc = factionStrengthNumber switch
@@ -260,10 +164,12 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 factions.Add(faction);
             }
             // Generate culture differences
-            int culture = RollDice(6) + RollDice(10);
+            int culture = Services.RollDice(6) + (Services.RollDice(6) * 10);
 
             // Calculate law level
-            int lawLevel = RollDice(6, 2) - 7 + government;
+            int lawLevel = Services.RollDice(6, 2) - 7 + government;
+            lawLevel = Math.Min(20, Math.Max(0, lawLevel));
+
 
             // Calculate starport
             int starportMod = 0, starport = 0;
@@ -286,7 +192,8 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 starportMod = -2;
             }
 
-            starport = RollDice(6, 2) + starportMod;
+            starport = Services.RollDice(6, 2) + starportMod;
+            starport = Math.Min(14, Math.Max(0, starport));
 
             // Add starport bases
             int rollForNavalBase = 0, rollForResearchBase = 0, rollForScoutBase = 0, rollForTASBase = 0;
@@ -294,7 +201,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             {
                 case 5:
                 case 6:
-                    rollForScoutBase = RollDice(6, 2);
+                    rollForScoutBase = Services.RollDice(6, 2);
                     if (rollForScoutBase >= 7)
                     {
                         starportBases.Add("Scout");
@@ -302,17 +209,17 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     break;
                 case 7:
                 case 8:
-                    rollForScoutBase = RollDice(6, 2);
+                    rollForScoutBase = Services.RollDice(6, 2);
                     if (rollForScoutBase >= 8)
                     {
                         starportBases.Add("Scout");
                     }
-                    rollForResearchBase = RollDice(6, 2);
+                    rollForResearchBase = Services.RollDice(6, 2);
                     if (rollForResearchBase >= 10)
                     {
                         starportBases.Add("Research");
                     }
-                    rollForTASBase = RollDice(6, 2);
+                    rollForTASBase = Services.RollDice(6, 2);
                     if (rollForTASBase >= 10)
                     {
                         starportBases.Add("TAS");
@@ -320,17 +227,17 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     break;
                 case 9:
                 case 10:
-                    rollForNavalBase = RollDice(6, 2);
+                    rollForNavalBase = Services.RollDice(6, 2);
                     if (rollForNavalBase >= 8)
                     {
                         starportBases.Add("Naval");
                     }
-                    rollForScoutBase = RollDice(6, 2);
+                    rollForScoutBase = Services.RollDice(6, 2);
                     if (rollForScoutBase >= 8)
                     {
                         starportBases.Add("Scout");
                     }
-                    rollForResearchBase = RollDice(6, 2);
+                    rollForResearchBase = Services.RollDice(6, 2);
                     if (rollForResearchBase >= 10)
                     {
                         starportBases.Add("Research");
@@ -341,17 +248,17 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 case 12:
                 case 13:
                 case 14:
-                    rollForNavalBase = RollDice(6, 2);
+                    rollForNavalBase = Services.RollDice(6, 2);
                     if (rollForNavalBase >= 8)
                     {
                         starportBases.Add("Naval");
                     }
-                    rollForScoutBase = RollDice(6, 2);
+                    rollForScoutBase = Services.RollDice(6, 2);
                     if (rollForScoutBase >= 10)
                     {
                         starportBases.Add("Scout");
                     }
-                    rollForResearchBase = RollDice(6, 2);
+                    rollForResearchBase = Services.RollDice(6, 2);
                     if (rollForResearchBase >= 8)
                     {
                         starportBases.Add("Research");
@@ -360,10 +267,6 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     break;
                 default:
                     break;
-            }
-            if (starportBases.Count == 0)
-            {
-                starportBases.Add("No bases");
             }
 
             // Calculate tech level
@@ -390,7 +293,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     break;
             }
 
-            switch (size)
+            switch (size.SizeNumber)
             {
                 case 0:
                 case 1:
@@ -473,7 +376,8 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                     break;
             }
 
-            techLevel = RollDice() + techLevelMod;
+            techLevel = Services.RollDice() + techLevelMod;
+            techLevel = Math.Min(30, Math.Max(0, techLevel));
 
             // Calculate travel codes
             string travelCode = "", travelCodesPrompt = "";
@@ -507,7 +411,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             {
                 tradeCodes.Add("Ag");
             }
-            if (size == 0 && atmosphere == 0 && hydrographics == 0) // Asteroid
+            if (size.SizeNumber == 0 && atmosphere == 0 && hydrographics == 0) // Asteroid
             {
                 tradeCodes.Add("As");
             }
@@ -519,11 +423,11 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             {
                 tradeCodes.Add("De");
             }
-            if (size >= 10 && hydrographics >= 1) // Fluid Oceans
+            if (size.SizeNumber >= 10 && hydrographics >= 1) // Fluid Oceans
             {
                 tradeCodes.Add("Fl");
             }
-            if (size >= 6 && size <= 8 && (atmosphere == 5 || atmosphere == 6 || atmosphere == 8) && (hydrographics == 5 || hydrographics == 6 || hydrographics == 7)) // Garden
+            if (size.SizeNumber >= 6 && size.SizeNumber <= 8 && (atmosphere == 5 || atmosphere == 6 || atmosphere == 8) && (hydrographics == 5 || hydrographics == 6 || hydrographics == 7)) // Garden
             {
                 tradeCodes.Add("Ga");
             }
@@ -539,7 +443,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             {
                 tradeCodes.Add("Ic");
             }
-            if ((size >= 0 && size <= 2 || size == 4 || size == 7 || size == 9) && population >= 9) // Industrial
+            if ((size.SizeNumber >= 0 && size.SizeNumber <= 2 || size.SizeNumber == 4 || size.SizeNumber == 7 || size.SizeNumber == 9) && population >= 9) // Industrial
             {
                 tradeCodes.Add("In");
             }
@@ -559,7 +463,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
             {
                 tradeCodes.Add("NI");
             }
-            if (size >= 2 && size <= 5 && atmosphere >= 0 && atmosphere <= 3 && hydrographics >= 0 && hydrographics <= 3) // Poor
+            if (size.SizeNumber >= 2 && size.SizeNumber <= 5 && atmosphere >= 0 && atmosphere <= 3 && hydrographics >= 0 && hydrographics <= 3) // Poor
             {
                 tradeCodes.Add("Po");
             }
@@ -614,7 +518,7 @@ Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
                 : "";
 
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size:X}{atmosphere:X}{hydrographics:X}{population:X}{government:X}{lawLevel:X}-{techLevel:X}    {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}   0101    {starportClass}{size.SizeClass}{atmosphere:X}{hydrographics:X}{population:X}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {
