@@ -1,46 +1,5 @@
 namespace UWPGenerator.models
 {
-    public class SizeModel
-    {
-        public required string SizeClass { get; set; }
-        public required int SizeNumber { get; set; }
-        public required string Diameter { get; set; }
-        public required string Gravity { get; set; }
-
-        public override string ToString()
-        {
-            return $"- Size Class: {SizeClass}, Diameter: {Diameter}, Gravity: {Gravity}";
-        }
-    }
-    public class AtmosphereModel
-    {
-        public required string Class { get; set; }
-        public required int Number { get; set; }
-        public required string Composition { get; set; }
-        public required string PressureATM { get; set; }
-        public required string GearRequired { get; set; }
-        public required string? UnusualAtmosphereType { get; set; }
-
-        public override string ToString()
-        {
-            return $"- Class: {Class}, Number: {Number}, Composition: {Composition}, Pressure: {PressureATM} atm, Gear Required: {GearRequired}"
-                 + (string.IsNullOrWhiteSpace(UnusualAtmosphereType) ? "" : $", Unusual Atmosphere Type: {UnusualAtmosphereType}");
-        }
-
-    }
-    public class Faction
-    {
-        public int Government { get; set; }
-        public int StrengthNumber { get; set; }
-        public string StrengthDesc { get; set; } = "";
-
-        public override string ToString()
-        {
-            return $"- Government: {Government}, Strength: {StrengthNumber} ({StrengthDesc})";
-        }
-
-    }
-
     public class World
     {
         public required string UWPString { get; set; } = "";
