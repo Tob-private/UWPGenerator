@@ -28,10 +28,10 @@ namespace UWPGenerator
             HydroGraphicsModel hydrographics = Characteristics.HydroGraphics(size.Number, atmosphere.Number, atmosphere.UnusualAtmosphereType, temperature.Number);
 
             // Calculate planet population
-            int population = Services.RollDice(6, 2) - 2;
+            PopulationModel population = Characteristics.Population();
 
             // Calculate planet government
-            int government = Services.RollDice(6, 2) - 7 + population;
+            int government = Services.RollDice(6, 2) - 7 + population.Number;
             government = Math.Min(10, Math.Max(0, government));
 
             // Generate factions
@@ -92,19 +92,19 @@ namespace UWPGenerator
             int starportMod = 0, starport = 0;
             List<string> starportBases = new List<string>();
 
-            if (population >= 10)
+            if (population.Number >= 10)
             {
                 starportMod = 2;
             }
-            else if (population >= 8)
+            else if (population.Number >= 8)
             {
                 starportMod = 1;
             }
-            else if (population <= 2)
+            else if (population.Number <= 2)
             {
                 starportMod = -1;
             }
-            else if (population <= 4)
+            else if (population.Number <= 4)
             {
                 starportMod = -2;
             }
@@ -256,7 +256,7 @@ namespace UWPGenerator
                     break;
             }
 
-            switch (population)
+            switch (population.Number)
             {
                 case 1:
                 case 2:
@@ -276,7 +276,7 @@ namespace UWPGenerator
                     break;
             }
 
-            switch (population)
+            switch (population.Number)
             {
                 case 0:
                 case 5:
@@ -324,7 +324,7 @@ namespace UWPGenerator
             // Calculate trade codes
             List<string> tradeCodes = new List<string>();
 
-            if (atmosphere.Number >= 4 && atmosphere.Number <= 9 && hydrographics.Number >= 4 && hydrographics.Number <= 8 && population >= 5 && population <= 7) // Agricultural
+            if (atmosphere.Number >= 4 && atmosphere.Number <= 9 && hydrographics.Number >= 4 && hydrographics.Number <= 8 && population.Number >= 5 && population.Number <= 7) // Agricultural
             {
                 tradeCodes.Add("Ag");
             }
@@ -332,7 +332,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("As");
             }
-            if (population == 0 && government == 0 && lawLevel == 0) // Barren
+            if (population.Number == 0 && government == 0 && lawLevel == 0) // Barren
             {
                 tradeCodes.Add("Ba");
             }
@@ -348,7 +348,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Ga");
             }
-            if (population >= 9) // High Population
+            if (population.Number >= 9) // High Population
             {
                 tradeCodes.Add("Hi");
             }
@@ -360,11 +360,11 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Ic");
             }
-            if ((size.Number >= 0 && size.Number <= 2 || size.Number == 4 || size.Number == 7 || size.Number == 9) && population >= 9) // Industrial
+            if ((size.Number >= 0 && size.Number <= 2 || size.Number == 4 || size.Number == 7 || size.Number == 9) && population.Number >= 9) // Industrial
             {
                 tradeCodes.Add("In");
             }
-            if (population <= 3) // Low Population
+            if (population.Number <= 3) // Low Population
             {
                 tradeCodes.Add("Lo");
             }
@@ -372,11 +372,11 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Lt");
             }
-            if (atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics.Number >= 0 && hydrographics.Number <= 3 && population >= 6) // Non-Agricultural
+            if (atmosphere.Number >= 0 && atmosphere.Number <= 3 && hydrographics.Number >= 0 && hydrographics.Number <= 3 && population.Number >= 6) // Non-Agricultural
             {
                 tradeCodes.Add("Na");
             }
-            if (population >= 0 && population <= 6 && government >= 0 && government <= 6) // Non-Industrial
+            if (population.Number >= 0 && population.Number <= 6 && government >= 0 && government <= 6) // Non-Industrial
             {
                 tradeCodes.Add("NI");
             }
@@ -384,7 +384,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Po");
             }
-            if ((atmosphere.Number == 6 || atmosphere.Number == 8) && population >= 6 && population <= 8 && government >= 4 && government <= 9) // Rich
+            if ((atmosphere.Number == 6 || atmosphere.Number == 8) && population.Number >= 6 && population.Number <= 8 && government >= 4 && government <= 9) // Rich
             {
                 tradeCodes.Add("Ri");
             }
@@ -435,7 +435,7 @@ namespace UWPGenerator
                 : "";
 
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size.Class}{atmosphere.Class}{hydrographics.Class}{population:X}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}   0101    {starportClass}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {

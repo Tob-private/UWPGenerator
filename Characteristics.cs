@@ -409,6 +409,98 @@ namespace UWPGenerator
 
             return hydrographics;
         }
+
+        public static PopulationModel Population()
+        {
+            int populationNumber = Math.Max(0, Math.Min(Services.RollDice(6, 2) - 2, 12));
+
+            string inhabitantsAmount = "", description = "";
+            long totalPopulation;
+
+            switch (populationNumber)
+            {
+                case 0:
+                    inhabitantsAmount = "None";
+                    description = "";
+                    totalPopulation = 0;
+                    break;
+                case 1:
+                    inhabitantsAmount = "1+";
+                    description = "A tiny farmstead or a single family";
+                    totalPopulation = random.Next(1, 100);
+                    break;
+                case 2:
+                    inhabitantsAmount = "100+";
+                    description = "A village";
+                    totalPopulation = random.Next(100, 1000);
+                    break;
+                case 3:
+                    inhabitantsAmount = "1 000+";
+                    description = "";
+                    totalPopulation = random.Next(1000, 10000);
+                    break;
+                case 4:
+                    inhabitantsAmount = "10 000+";
+                    description = "Small town";
+                    totalPopulation = random.Next(10000, 100000);
+                    break;
+                case 5:
+                    inhabitantsAmount = "100 000+";
+                    description = "Average city";
+                    totalPopulation = random.Next(100000, 1000000);
+                    break;
+                case 6:
+                    inhabitantsAmount = "1 000 000+";
+                    description = "";
+                    totalPopulation = random.Next(1000000, 10000000);
+                    break;
+                case 7:
+                    inhabitantsAmount = "10 000 000+";
+                    description = "Large city";
+                    totalPopulation = random.Next(10000000, 100000000);
+                    break;
+                case 8:
+                    inhabitantsAmount = "100 000 000+";
+                    description = "";
+                    totalPopulation = random.Next(100000000, 1000000000);
+                    break;
+                case 9:
+                    inhabitantsAmount = "1 000 000 000+";
+                    description = "";
+                    totalPopulation = Services.NextLong(random, 1000000000, 10000000000);
+                    break;
+                case 10:
+                    inhabitantsAmount = "10 000 000 000+";
+                    description = "";
+                    totalPopulation = Services.NextLong(random, 10000000000, 100000000000);
+                    break;
+                case 11:
+                    inhabitantsAmount = "100 000 000 000+";
+                    description = "Incredibly crowded world";
+                    totalPopulation = Services.NextLong(random, 100000000000, 1000000000000);
+                    break;
+                case >= 12:
+                    inhabitantsAmount = "1 000 000 000 000+";
+                    description = "World-city";
+                    totalPopulation = Services.NextLong(random, 1000000000000, 10000000000000);
+                    break;
+
+                default:
+                    throw new Exception("Couldn't set population" + populationNumber);
+            }
+
+
+            PopulationModel population = new()
+            {
+                Class = $"{populationNumber:x}",
+                Number = populationNumber,
+                InhabitantsAmount = inhabitantsAmount,
+                TotalPopulation = totalPopulation,
+                Description = description,
+            };
+
+            return population;
+        }
     }
 
 }

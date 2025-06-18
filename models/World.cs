@@ -6,7 +6,7 @@ namespace UWPGenerator.models
         public required SizeModel Size { get; set; }
         public required AtmosphereModel Atmosphere { get; set; }
         public required HydroGraphicsModel Hydrographics { get; set; }
-        public required int Population { get; set; }
+        public required PopulationModel Population { get; set; }
         public required int Government { get; set; }
         public required List<Faction> Factions { get; set; }
         public required int Culture { get; set; }
@@ -20,14 +20,21 @@ namespace UWPGenerator.models
         public override string ToString()
         {
             return $@"
+-------------------------------------------------------------
 UWP String: {UWPString}
-Size:
-{Size}
-Atmosphere: 
-{Atmosphere}
-Hydrographics: 
-{Hydrographics}
-Population: {Population}
+-------------------------------------------------------------
+= Size:
+-{Size}
+
+= Atmosphere: 
+-{Atmosphere}
+
+= Hydrographics: 
+-{Hydrographics}
+
+= Population: 
+-{Population}
+
 Government: {Government}
 Factions: 
 {string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}
