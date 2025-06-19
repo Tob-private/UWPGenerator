@@ -7,9 +7,9 @@ namespace UWPGenerator.models
         public required AtmosphereModel Atmosphere { get; set; }
         public required HydroGraphicsModel Hydrographics { get; set; }
         public required PopulationModel Population { get; set; }
-        public required int Government { get; set; }
+        public required GovernmentModel Government { get; set; }
         public required List<Faction> Factions { get; set; }
-        public required int Culture { get; set; }
+        public required string Culture { get; set; }
         public required int LawLevel { get; set; }
         public required int Starport { get; set; }
         public required List<string> StarportBases { get; set; }
@@ -35,10 +35,9 @@ UWP String: {UWPString}
 = Population: 
 -{Population}
 
-Government: {Government}
-Factions: 
-{string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}
-Culture: {Culture}
+Government: 
+-{Government}
+
 Law Level: {LawLevel}
 Starport: {Starport}
 Starport Bases: {string.Join("; ", StarportBases.Select(f => f.ToString()))}

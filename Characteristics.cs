@@ -501,6 +501,163 @@ namespace UWPGenerator
 
             return population;
         }
+
+        public static GovernmentModel Government(int population)
+        {
+            int governmentNumber = Services.RollDice(6, 2) - 7 + population;
+            _ = Math.Min(15, Math.Max(0, governmentNumber));
+
+            string type = "", description = "";
+            List<string> contraband = [];
+
+
+            switch (governmentNumber)
+            {
+                case 0:
+                    type = "None";
+                    description = "No government structure. In many cases, family bonds predominate";
+                    contraband.Add("None");
+                    break;
+                case 1:
+                    type = "Company/Corporation";
+                    description = "Ruling functions are assumed by a company managerial elite, and most citizenry are company employees or dependants";
+                    contraband.AddRange(new[] { "Weapons", "Drugs", "Travellers" });
+                    break;
+                case 2:
+                    type = "Participating Democracy";
+                    description = "Ruling functions are reached by the advice and consent of the citizenry directly";
+                    contraband.Add("Drugs");
+                    break;
+                case 3:
+                    type = "Self-Perpetuating Oligarchy";
+                    description = "Ruling functions are performed by a restricted minority, with little or no input from the mass of citizenry";
+                    contraband.AddRange(new[] { "Technology", "Weapons", "Travellers" });
+                    break;
+                case 4:
+                    type = "Representative Democracy";
+                    description = "Ruling functions are performed by elected representatives";
+                    contraband.AddRange(new[] { "Drugs", "Weapons", "Psionics" });
+                    break;
+                case 5:
+                    type = "Feudal Technocracy";
+                    description = "Ruling functions are performed by specific individuals for persons who agree to be ruled by them. Relationships are based on the performance of technical activities which are mutually beneficial";
+                    contraband.AddRange(new[] { "Technology", "Weapons", "Computers" });
+                    break;
+                case 6:
+                    type = "Captive Government";
+                    description = "Ruling functions are performed by an imposed leadership answerable to an outside group";
+                    contraband.AddRange(new[] { "Weapons", "Technology", "Travellers" });
+                    break;
+                case 7:
+                    type = "Balkanisation";
+                    description = "No central authority exists; rival governments compete for control. Law level refers to the government nearest the starport";
+                    contraband.Add("Varies");
+                    break;
+                case 8:
+                    type = "Civil Service Bureaucracy";
+                    description = "Ruling functions are performed by government agencies employing individuals selected for their expertise";
+                    contraband.AddRange(new[] { "Drugs", "Weapons", "Technology" });
+                    break;
+                case 9:
+                    type = "Impersonal Bureaucracy";
+                    description = "Ruling functions are performed by agencies which have become insulated from the governed citizens";
+                    contraband.AddRange(new[] { "Technology", "Weapons", "Drugs", "Travellers", "Psionics" });
+                    break;
+                case 10:
+                    type = "Charismatic Dictator";
+                    description = "Ruling functions are performed by agencies directed by a single leader who enjoys the overwhelming confidence of the citizens";
+                    contraband.Add("None");
+                    break;
+                case 11:
+                    type = "Non-Charismatic Leader";
+                    description = "A previous charismatic dictator has been replaced by a leader through normal channels";
+                    contraband.AddRange(new[] { "Weapons", "Technology", "Computers" });
+                    break;
+                case 12:
+                    type = "Charismatic Oligarchy";
+                    description = "Ruling functions are performed by a select group of members of an organisation or class which enjoys the overwhelming confidence of the citizenry";
+                    contraband.Add("Weapons");
+                    break;
+                case 13:
+                    type = "Religious Dictatorship";
+                    description = "Ruling functions are performed by a religious organisation without regard to specific individual needs of the citizenry";
+                    contraband.Add("Varies");
+                    break;
+                case 14:
+                    type = "Religious Autocracy";
+                    description = "Government by a single religious leader having absolute power over the citizenry";
+                    contraband.Add("Varies");
+                    break;
+                case 15:
+                    type = "Totalitarian Oligarchy";
+                    description = "Government by an all-powerful minority which maintains absolute control through widespread coercion and oppression";
+                    contraband.Add("Varies");
+                    break;
+                default:
+                    throw new Exception("Could not set government with the following number: " + governmentNumber);
+            }
+
+
+            // Generate factions
+            List<Faction> factions = [];
+            int factionsAmountMod = 0;
+
+            if (governmentNumber == 0 || governmentNumber == 7)
+            {
+
+                factionsAmountMod = 1;
+            }
+            else if (governmentNumber >= 10)
+            {
+                factionsAmountMod = -1;
+            }
+
+            int factionsAmount = Services.RollDice(3) - factionsAmountMod;
+
+            for (int i = 0; i < factionsAmount; i++)
+            {
+                int factionGovernment = Services.RollDice(6, 2);
+                int factionStrengthNumber = Services.RollDice(6, 2);
+                string factionStrengthDesc = "";
+
+                factionStrengthDesc = factionStrengthNumber switch
+                {
+                    2 or 3 => "Obscure group - few have heard of them, no popular support",
+                    4 or 5 => "Fringe group - few supporters",
+                    6 or 7 => "Minor group - some supporters",
+                    8 or 9 => "Notable group - significant support, well known",
+                    10 or 11 => "Significant - nearly as powerful as the governmentNumber",
+                    12 => "Overwhelming popular support - more powerful than the governmentNumber",
+                    _ => throw new Exception("Couldnt set factionStrengthDesc"),
+                };
+                Faction faction = new()
+                {
+                    Government = factionGovernment,
+                    StrengthNumber = factionStrengthNumber,
+                    StrengthDesc = factionStrengthDesc
+                };
+
+
+                factions.Add(faction);
+            }
+            // Generate culture differences
+            int cultureNumber = Services.RollDice(6) + (Services.RollDice(6) * 10);
+            string culture = "";
+
+            GovernmentModel government = new()
+            {
+                Class = $"{governmentNumber:x}",
+                Number = governmentNumber,
+                Type = type,
+                Description = description,
+                Culture = culture,
+                Contraband = contraband,
+                Factions = factions
+            };
+
+            return government;
+
+        }
     }
 
 }

@@ -31,60 +31,11 @@ namespace UWPGenerator
             PopulationModel population = Characteristics.Population();
 
             // Calculate planet government
-            int government = Services.RollDice(6, 2) - 7 + population.Number;
-            government = Math.Min(10, Math.Max(0, government));
+            GovernmentModel government = Characteristics.Government(population.Number);
 
-            // Generate factions
-            List<Faction> factions = new List<Faction>();
-            int factionsAmountMod = 0;
-
-            if (government == 0 || government == 7)
-            {
-
-                factionsAmountMod = 1;
-            }
-            else if (government >= 10)
-            {
-                factionsAmountMod = -1;
-            }
-            else
-            {
-                factionsAmountMod = 0;
-            }
-
-            int factionsAmount = Services.RollDice(3) - factionsAmountMod;
-
-            for (int i = 0; i < factionsAmount; i++)
-            {
-                int factionGovernment = Services.RollDice(6, 2);
-                int factionStrengthNumber = Services.RollDice(6, 2);
-                string factionStrengthDesc = "";
-
-                factionStrengthDesc = factionStrengthNumber switch
-                {
-                    2 or 3 => "Obscure group - few have heard of them, no popular support",
-                    4 or 5 => "Fringe group - few supporters",
-                    6 or 7 => "Minor group - some supporters",
-                    8 or 9 => "Notable group - significant support, well known",
-                    10 or 11 => "Significant - nearly as powerful as the government",
-                    12 => "Overwhelming popular support - more powerful than the government",
-                    _ => throw new Exception("Couldnt set factionStrengthDesc"),
-                };
-                Faction faction = new()
-                {
-                    Government = factionGovernment,
-                    StrengthNumber = factionStrengthNumber,
-                    StrengthDesc = factionStrengthDesc
-                };
-
-
-                factions.Add(faction);
-            }
-            // Generate culture differences
-            int culture = Services.RollDice(6) + (Services.RollDice(6) * 10);
-
+            
             // Calculate law level
-            int lawLevel = Services.RollDice(6, 2) - 7 + government;
+            int lawLevel = Services.RollDice(6, 2) - 7 + government.Number;
             lawLevel = Math.Min(20, Math.Max(0, lawLevel));
 
 
@@ -299,7 +250,7 @@ namespace UWPGenerator
             // Calculate travel codes
             string travelCode = "", travelCodesPrompt = "";
 
-            if (atmosphere.Number >= 10 && (government == 0 || government == 7 || government == 10) && (lawLevel == 0 || lawLevel >= 9))
+            if (atmosphere.Number >= 10 && (government.Number == 0 || government.Number == 7 || government.Number == 10) && (lawLevel == 0 || lawLevel >= 9))
             {
                 Console.WriteLine("Your world has relatively extreme characteristics. Consider it for Amber travel code status");
             }
@@ -332,7 +283,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("As");
             }
-            if (population.Number == 0 && government == 0 && lawLevel == 0) // Barren
+            if (population.Number == 0 && government.Number == 0 && lawLevel == 0) // Barren
             {
                 tradeCodes.Add("Ba");
             }
@@ -376,7 +327,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Na");
             }
-            if (population.Number >= 0 && population.Number <= 6 && government >= 0 && government <= 6) // Non-Industrial
+            if (population.Number >= 0 && population.Number <= 6 && government.Number >= 0 && government.Number <= 6) // Non-Industrial
             {
                 tradeCodes.Add("NI");
             }
@@ -384,7 +335,7 @@ namespace UWPGenerator
             {
                 tradeCodes.Add("Po");
             }
-            if ((atmosphere.Number == 6 || atmosphere.Number == 8) && population.Number >= 6 && population.Number <= 8 && government >= 4 && government <= 9) // Rich
+            if ((atmosphere.Number == 6 || atmosphere.Number == 8) && population.Number >= 6 && population.Number <= 8 && government.Number >= 4 && government.Number <= 9) // Rich
             {
                 tradeCodes.Add("Ri");
             }
@@ -435,7 +386,7 @@ namespace UWPGenerator
                 : "";
 
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government:X}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}   0101    {starportClass}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government.Class}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {
@@ -445,8 +396,8 @@ namespace UWPGenerator
                 Hydrographics = hydrographics,
                 Population = population,
                 Government = government,
-                Factions = factions,
-                Culture = culture,
+                Factions = government.Factions,
+                Culture = government.Culture,
                 LawLevel = lawLevel,
                 Starport = starport,
                 StarportBases = starportBases,
