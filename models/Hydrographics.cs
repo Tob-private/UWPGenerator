@@ -9,7 +9,9 @@ namespace UWPGenerator.models
 
         public override string ToString()
         {
-            return $"- Class: {Class}, Hydrographic Percentage: {Percentage}, Description: {Description}";
+            return $@"- Class: {Class}
+-- Hydrographic Percentage: {Percentage}
+-- Description: {Description}";
         }
     }
 }

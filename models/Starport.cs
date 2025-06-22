@@ -12,8 +12,11 @@ namespace UWPGenerator.models
 
         public override string ToString()
         {
-            return $@"- Class: {Class}, Quality: {Quality}, Berthing Cost: {BerthingCost}, Fuel: {Fuel}
-Facilities: {string.Join("; ", Facilities.Select(f => f.ToString()))}";
+            return $@"- Class: {Class}
+-- Quality: {Quality}
+-- Berthing Cost: {BerthingCost}
+-- Fuel: {Fuel}
+-- Facilities: {string.Join("; ", Facilities.Select(f => f.ToString()))}";
         }
     }
 }

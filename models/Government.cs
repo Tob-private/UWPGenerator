@@ -12,10 +12,11 @@ namespace UWPGenerator.models
 
         public override string ToString()
         {
-            return $@"- Class: {Class}, Type: {Type} ({Description})
-- Contraband: {string.Join("; ", Contraband.Select(f => f.ToString()))}
-- Culture: {Culture}
-- Factions: {string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}";
+            return $@"- Class: {Class}
+-- Type: {Type} ({Description})
+-- Contraband: {string.Join("; ", Contraband.Select(f => f.ToString()))}
+-- Culture: {Culture}
+-- Factions: {string.Join(Environment.NewLine, Factions.Select(f => f.ToString()))}";
         }
     }
 }

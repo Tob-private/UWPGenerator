@@ -35,8 +35,7 @@ namespace UWPGenerator
 
 
             // Calculate law level
-           int lawLevel = Characteristics.LawLevel(government.Number);
-
+            int lawLevel = Characteristics.LawLevel(government.Number);
 
             // Calculate starport
             StarportModel starport = Characteristics.Starport(population.Number);

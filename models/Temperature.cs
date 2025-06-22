@@ -9,7 +9,10 @@ namespace UWPGenerator.models
 
         public override string ToString()
         {
-            return $"- Number: {Number}, Type: {Type}, AvgTemo: {AvgTemp}, Description: {Description}";
+            return $@"- Number: {Number}
+-- Type: { Type}
+-- Average Temperature: {AvgTemp}
+-- Description: {Description}";
         }
     }
 }

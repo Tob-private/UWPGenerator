@@ -690,6 +690,7 @@ namespace UWPGenerator
                 };
                 Faction faction = new()
                 {
+                    Index = i + 1,
                     Type = factionGovType,
                     TypeDesc = factionGovDesc,
                     Contraband = factionContraband,
@@ -904,6 +905,11 @@ namespace UWPGenerator
                     break;
                 default:
                     throw new Exception("Couldnt set starport" + starportNumber);
+            }
+
+            if (starportBases.Count == 0)
+            {
+                starportBases.Add("None");
             }
 
             StarportModel starport = new()

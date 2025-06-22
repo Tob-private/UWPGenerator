@@ -8,11 +8,19 @@ namespace UWPGenerator.models
         public required string PressureATM { get; set; }
         public required string GearRequired { get; set; }
         public required string? UnusualAtmosphereType { get; set; }
-
         public override string ToString()
         {
-            return $"- Class: {Class}, Number: {Number}, Composition: {Composition}, Pressure: {PressureATM} atm, Gear Required: {GearRequired}"
-                 + (string.IsNullOrWhiteSpace(UnusualAtmosphereType) ? "" : $", Unusual Atmosphere Type: {UnusualAtmosphereType}");
+
+            string unusual = string.IsNullOrWhiteSpace(UnusualAtmosphereType)
+                ? ""
+                : $"--Unusual Atmosphere Type: {UnusualAtmosphereType}";
+
+            return $@"- Class: {Class}
+-- Number: {Number}
+-- Composition: {Composition}
+-- Pressure: {PressureATM} atm
+-- Gear Required: {GearRequired}
+{unusual}";
         }
     }
 }

@@ -2,6 +2,7 @@ namespace UWPGenerator.models
 {
     public class Faction
     {
+        public required int Index { get; set; }
         public required string Type { get; set; }
         public required string TypeDesc { get; set; }
         public required List<string> Contraband { get; set; }
@@ -11,11 +12,11 @@ namespace UWPGenerator.models
         public override string ToString()
         {
             return $@"
------------------------------------------------------------
-- Governing Type: {Type} ({TypeDesc}), Strength: {StrengthNumber} ({StrengthDesc})
-- Contraband: 
-{string.Join("; ", Contraband.Select(f => f.ToString()))}
------------------------------------------------------------";
+            
+--- Faction #{Index}
+--- Governing Type: {Type} ({TypeDesc})
+--- Strength: {StrengthNumber} ({StrengthDesc})
+--- Contraband: {string.Join("; ", Contraband.Select(f => f.ToString()))}";
         }
     }
 }

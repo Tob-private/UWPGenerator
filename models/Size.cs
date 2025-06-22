@@ -9,7 +9,9 @@ namespace UWPGenerator.models
 
         public override string ToString()
         {
-            return $"- Size Class: {Class}, Diameter: {Diameter}, Gravity: {Gravity}";
+            return $@"- Class: {Class}
+-- Diameter: {Diameter}
+-- Gravity: {Gravity}";
         }
     }
 }
