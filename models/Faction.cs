@@ -14,9 +14,9 @@ namespace UWPGenerator.models
             return $@"
             
 --- Faction #{Index}
---- Governing Type: {Type} ({TypeDesc})
---- Strength: {StrengthNumber} ({StrengthDesc})
---- Contraband: {string.Join("; ", Contraband.Select(f => f.ToString()))}";
+---- Governing Type: {Type} ({TypeDesc})
+---- Strength: {StrengthNumber} ({StrengthDesc})
+---- Contraband: {string.Join("; ", Contraband.Select(f => f.ToString()))}";
         }
     }
 }
