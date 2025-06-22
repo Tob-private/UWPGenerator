@@ -270,7 +270,7 @@ namespace UWPGenerator
                     temperatureMod = 0;
                 }
                 temperatureNumber = Services.RollDice(6, 2) + temperatureMod;
-                _ = Math.Min(20, Math.Max(0, temperatureNumber));
+                temperatureNumber = Math.Min(20, Math.Max(0, temperatureNumber));
             }
 
             switch (temperatureNumber)
@@ -505,7 +505,7 @@ namespace UWPGenerator
         public static GovernmentModel Government(int population)
         {
             int governmentNumber = Services.RollDice(6, 2) - 7 + population;
-            _ = Math.Min(15, Math.Max(0, governmentNumber));
+            governmentNumber = Math.Min(15, Math.Max(0, governmentNumber));
 
             string type = "", description = "";
             List<string> contraband = [];
@@ -757,8 +757,6 @@ namespace UWPGenerator
             };
 
             return government;
-
         }
     }
-
 }
