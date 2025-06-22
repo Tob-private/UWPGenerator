@@ -919,5 +919,116 @@ namespace UWPGenerator
 
             return starport;
         }
+        public static int TechLevel(int starport, int size, int atmosphere, int hydrographics, int population, int government)
+        {
+            int techLevel = 0, techLevelMod = 0;
+
+            // Add tech level mods based on all previous characteristics
+            switch (starport)
+            {
+                case 10:
+                    techLevelMod += 6;
+                    break;
+                case 11:
+                    techLevelMod += 4;
+                    break;
+                case 12:
+                    techLevelMod += 2;
+                    break;
+                case 0:
+                case 1:
+                case 2:
+                    techLevelMod += -4;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (size)
+            {
+                case 0:
+                case 1:
+                    techLevelMod += 2;
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    techLevelMod += 1;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (atmosphere)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                    techLevelMod += 1;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (hydrographics)
+            {
+                case 0:
+                case 9:
+                    techLevelMod += 1;
+                    break;
+                case 10:
+                    techLevelMod += 2;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (population)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 8:
+                    techLevelMod += 1;
+                    break;
+                case 9:
+                    techLevelMod += 2;
+                    break;
+                case 10:
+                    techLevelMod += 4;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (government)
+            {
+                case 0:
+                case 5:
+                    techLevelMod += 1;
+                    break;
+                case 7:
+                    techLevelMod += 2;
+                    break;
+                case 13:
+                case 14:
+                    techLevelMod += -2;
+                    break;
+                default:
+                    break;
+            }
+
+            techLevel = Services.RollDice() + techLevelMod;
+            return Math.Min(30, Math.Max(0, techLevel));
+        }
     }
 }
