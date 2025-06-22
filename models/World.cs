@@ -41,11 +41,11 @@ UWP String: {UWPString}
 = Starport: 
 -{Starport}
 
-Starport Bases: {string.Join("; ", Starport.Bases.Select(f => f.ToString()))}
+= Starport Bases: {string.Join("; ", Starport.Bases.Select(f => f.ToString()))}
 
-Tech Level: {TechLevel}
-Travel Code: {TravelCode}
-Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
+= Tech Level: {TechLevel}
+= Travel Code: {TravelCode}
+= Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}
 
 ";
         }
