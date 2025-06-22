@@ -33,7 +33,7 @@ namespace UWPGenerator
             // Calculate planet government
             GovernmentModel government = Characteristics.Government(population.Number);
 
-            
+
             // Calculate law level
             int lawLevel = Services.RollDice(6, 2) - 7 + government.Number;
             lawLevel = Math.Min(20, Math.Max(0, lawLevel));
@@ -396,7 +396,6 @@ namespace UWPGenerator
                 Hydrographics = hydrographics,
                 Population = population,
                 Government = government,
-                Factions = government.Factions,
                 Culture = government.Culture,
                 LawLevel = lawLevel,
                 Starport = starport,

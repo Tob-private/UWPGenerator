@@ -510,7 +510,6 @@ namespace UWPGenerator
             string type = "", description = "";
             List<string> contraband = [];
 
-
             switch (governmentNumber)
             {
                 case 0:
@@ -616,11 +615,72 @@ namespace UWPGenerator
 
             for (int i = 0; i < factionsAmount; i++)
             {
-                int factionGovernment = Services.RollDice(6, 2);
-                int factionStrengthNumber = Services.RollDice(6, 2);
-                string factionStrengthDesc = "";
+                int factionGovernmentNumber = Services.RollDice(6, 2);
+                string factionGovType, factionGovDesc;
+                List<string> factionContraband = [];
+                switch (factionGovernmentNumber)
+                {
+                    case 2:
+                        factionGovType = "Participating Democracy";
+                        factionGovDesc = "Ruling functions are reached by the advice and consent of the citizenry directly";
+                        factionContraband.Add("Drugs");
+                        break;
+                    case 3:
+                        factionGovType = "Self-Perpetuating Oligarchy";
+                        factionGovDesc = "Ruling functions are performed by a restricted minority, with little or no input from the mass of citizenry";
+                        factionContraband.AddRange(new[] { "Technology", "Weapons", "Travellers" });
+                        break;
+                    case 4:
+                        factionGovType = "Representative Democracy";
+                        factionGovDesc = "Ruling functions are performed by elected representatives";
+                        factionContraband.AddRange(new[] { "Drugs", "Weapons", "Psionics" });
+                        break;
+                    case 5:
+                        factionGovType = "Feudal Technocracy";
+                        factionGovDesc = "Ruling functions are performed by specific individuals for persons who agree to be ruled by them. Relationships are based on the performance of technical activities which are mutually beneficial";
+                        factionContraband.AddRange(new[] { "Technology", "Weapons", "Computers" });
+                        break;
+                    case 6:
+                        factionGovType = "Captive Government";
+                        factionGovDesc = "Ruling functions are performed by an imposed leadership answerable to an outside group";
+                        factionContraband.AddRange(new[] { "Weapons", "Technology", "Travellers" });
+                        break;
+                    case 7:
+                        factionGovType = "Balkanisation";
+                        factionGovDesc = "No central authority exists; rival governments compete for control. Law level refers to the government nearest the starport";
+                        factionContraband.Add("Varies");
+                        break;
+                    case 8:
+                        factionGovType = "Civil Service Bureaucracy";
+                        factionGovDesc = "Ruling functions are performed by government agencies employing individuals selected for their expertise";
+                        factionContraband.AddRange(new[] { "Drugs", "Weapons", "Technology" });
+                        break;
+                    case 9:
+                        factionGovType = "Impersonal Bureaucracy";
+                        factionGovDesc = "Ruling functions are performed by agencies which have become insulated from the governed citizens";
+                        factionContraband.AddRange(new[] { "Technology", "Weapons", "Drugs", "Travellers", "Psionics" });
+                        break;
+                    case 10:
+                        factionGovType = "Charismatic Dictator";
+                        factionGovDesc = "Ruling functions are performed by agencies directed by a single leader who enjoys the overwhelming confidence of the citizens";
+                        factionContraband.Add("None");
+                        break;
+                    case 11:
+                        factionGovType = "Non-Charismatic Leader";
+                        factionGovDesc = "A previous charismatic dictator has been replaced by a leader through normal channels";
+                        factionContraband.AddRange(new[] { "Weapons", "Technology", "Computers" });
+                        break;
+                    case 12:
+                        factionGovType = "Charismatic Oligarchy";
+                        factionGovDesc = "Ruling functions are performed by a select group of members of an organisation or class which enjoys the overwhelming confidence of the citizenry";
+                        factionContraband.Add("Weapons");
+                        break;
+                    default:
+                        throw new Exception("Could not set faction with the following number: " + factionGovernmentNumber);
+                }
 
-                factionStrengthDesc = factionStrengthNumber switch
+                int factionStrengthNumber = Services.RollDice(6, 2);
+                string factionStrengthDesc = factionStrengthNumber switch
                 {
                     2 or 3 => "Obscure group - few have heard of them, no popular support",
                     4 or 5 => "Fringe group - few supporters",
@@ -628,11 +688,13 @@ namespace UWPGenerator
                     8 or 9 => "Notable group - significant support, well known",
                     10 or 11 => "Significant - nearly as powerful as the governmentNumber",
                     12 => "Overwhelming popular support - more powerful than the governmentNumber",
-                    _ => throw new Exception("Couldnt set factionStrengthDesc"),
+                    _ => throw new Exception("Couldnt set factionStrengthDesc" + factionStrengthNumber),
                 };
                 Faction faction = new()
                 {
-                    Government = factionGovernment,
+                    Type = factionGovType,
+                    TypeDesc = factionGovDesc,
+                    Contraband = factionContraband,
                     StrengthNumber = factionStrengthNumber,
                     StrengthDesc = factionStrengthDesc
                 };
@@ -642,7 +704,46 @@ namespace UWPGenerator
             }
             // Generate culture differences
             int cultureNumber = Services.RollDice(6) + (Services.RollDice(6) * 10);
-            string culture = "";
+            string cultureDesc = cultureNumber switch
+            {
+                11 => "Sexist - one gender is considered subservient or inferior to the other.",
+                12 => "Religious - culture is heavily influenced by a religion or belief systems, possibly one unique to this world.",
+                13 => "Artistic - art and culture are highly prized. Aesthetic design is important in all artefacts produced on world.",
+                14 => "Ritualised - social interaction and trade is highly formalised. Politeness and adherence to traditional forms is considered very important.",
+                15 => "Conservative - the culture resists change and outside influences.",
+                16 => "Xenophobic - the culture distrusts outsiders and alien influences. Offworlders will face considerable prejudice.",
+                21 => "Taboo - a particular topic is forbidden and cannot be discussed. Travellers who unwittingly mention this topic will be ostracised.",
+                22 => "Deceptive - trickery and equivocation are considered acceptable. Honesty is a sign of weakness.",
+                23 => "Liberal - the culture welcomes change and offworld influence. Travellers who bring new and strange ideas will be welcomed.",
+                24 => "Honourable - one's word is one's bond in the culture. Lying is both rare and despised.",
+                25 => "Influenced - the culture is heavily influenced by another, neighbouring world. Roll again for a cultural quirk that has been inherited from the culture.",
+                26 => "Fusion - the culture is a merger of two distinct cultures. Roll again twice to determine the quirks inherited from these cultures. If the quirks are incompatible, then the culture is likely divided.",
+                31 => "Barbaric - physical strength and combat prowess are highly valued in the culture. Travellers may be challenged to a fight, or dismissed if they seem incapable of defending themselves. Sports tend towards the bloody and violent.",
+                32 => "Remnant - the culture is a surviving remnant of a once-great and vibrant civilisation, clinging to its former glory. The world is filled with crumbling ruins, and every story revolves around the good old days.",
+                33 => "Degenerate - the culture is falling apart and is on the brink of war or economic collapse. Violent protests are common, and the social order is decaying.",
+                34 => "Progressive - the culture is expanding and vibrant. Fortunes are being made in trade; science is forging bravely ahead.",
+                35 => "Recovering - a recent trauma, such as a plague, war, disaster or despotic regime has left scars on the culture.",
+                36 => "Nexus - members of many different cultures and species visit here.",
+                41 => "Tourist Attraction - some aspect of the culture or the planet draws visitors from all over charted space.",
+                42 => "Violent - physical conflict is common, taking the form of duels, brawls or other contests. Trial by combat is a part of their judicial system.",
+                43 => "Peaceful - physical conflict is almost unheard-of. The culture produces few soldiers, and diplomacy reigns supreme. Forceful Travellers will be ostracised.",
+                44 => "Obsessed - everyone is obsessed with or addicted to a substance, personality, act or item. This monomania pervades every aspect of the culture.",
+                45 => "Fashion - fine clothing and decoration are considered vitally important in the culture. Underdressed Travellers have no standing here.",
+                46 => "At war - the culture is at war, either with another planet or polity, or is troubled by terrorists or rebels.",
+                51 => "Unusual Custom: Offworlders - space travellers hold a unique position in the culture's mythology or beliefs, and travellers will be expected to live up to these myths.",
+                52 => "Unusual Custom: Starport - the planet's starport is more than a commercial centre; it might be a religious temple, or be seen as highly controversial and surrounded by protestors.",
+                53 => "Unusual Custom: Media - news agencies and telecommunications channels are especially strange here. Getting accurate information may be difficult.",
+                54 => "Unusual Customs: Technology - the culture interacts with technology in an unusual way. Telecommunications might be banned, robots might have civil rights, or cyborgs might be property.",
+                55 => "Unusual Customs: Lifecycle - there might be a mandatory age of termination, or anagathics might be widely used. Family units might be different, with children being raised by the state or banned in favour of cloning.",
+                56 => "Unusual Customs: Social Standings - the culture has a distinct caste system. Travellers of a low social standing who do not behave appropriately will face punishment.",
+                61 => "Unusual Customs: Trade - the culture has an odd attitude towards some aspect of commerce, which may interfere with trade at the spaceport. For example, merchants might expect a gift as part of a deal, or some goods may only be handled by certain families.",
+                62 => "Unusual Customs: Nobility - those of high social standing have a strange custom associated with them; perhaps nobles are blinded, or must live in gilded cages, or only serve for a single year before being exiled.",
+                63 => "Unusual Customs: Sex - the culture has an unusual attitude towards intercourse and reproduction. Perhaps cloning is used instead, or sex is used to seal commercial deals.",
+                64 => "Unusual Customs: Eating - food and drink occupies an unusual place in the culture. Perhaps eating is a private affair, or banquets and formal dinners are seen as the highest form of politeness.",
+                65 => "Unusual Customs: Travel - travellers may be distrusted or feted, or perhaps the culture frowns on those who leave their homes.",
+                66 => "Unusual Customs: Conspiracy - something strange is going on. The government is being subverted by another group or agency.",
+                _ => throw new Exception($"Could not set cultureDesc: {cultureNumber}"),
+            };
 
             GovernmentModel government = new()
             {
@@ -650,7 +751,7 @@ namespace UWPGenerator
                 Number = governmentNumber,
                 Type = type,
                 Description = description,
-                Culture = culture,
+                Culture = cultureDesc,
                 Contraband = contraband,
                 Factions = factions
             };

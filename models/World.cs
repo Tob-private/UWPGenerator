@@ -8,7 +8,6 @@ namespace UWPGenerator.models
         public required HydroGraphicsModel Hydrographics { get; set; }
         public required PopulationModel Population { get; set; }
         public required GovernmentModel Government { get; set; }
-        public required List<Faction> Factions { get; set; }
         public required string Culture { get; set; }
         public required int LawLevel { get; set; }
         public required int Starport { get; set; }
