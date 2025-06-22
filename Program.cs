@@ -44,29 +44,7 @@ namespace UWPGenerator
             int techLevel = Characteristics.TechLevel(starport.Number, size.Number, atmosphere.Number, hydrographics.Number, population.Number, government.Number);
 
             // Calculate travel codes
-            string travelCode = "", travelCodesPrompt = "";
-
-            if (atmosphere.Number >= 10 && (government.Number == 0 || government.Number == 7 || government.Number == 10) && (lawLevel == 0 || lawLevel >= 9))
-            {
-                Console.WriteLine("Your world has relatively extreme characteristics. Consider it for Amber travel code status");
-            }
-            do
-            {
-                Console.Write("Would you like there do be a travel code? (y/n) --- ");
-                travelCodesPrompt = Console.ReadLine()?.Trim().ToLower() ?? "";
-                Console.WriteLine("");
-            } while (travelCodesPrompt != "y" && travelCodesPrompt != "n");
-
-            if (travelCodesPrompt == "y")
-            {
-                //Ask user for which travel code they want (amber/red)
-                do
-                {
-                    Console.Write("Which travel code should it be? (amber/red) --- ");
-                    travelCode = Console.ReadLine()?.Trim().ToLower() ?? "";
-                    Console.WriteLine("");
-                } while (travelCode != "amber" && travelCode != "red");
-            }
+            string travelCode = Characteristics.TravelCode(atmosphere.Number, government.Number, lawLevel);
 
             // Calculate trade codes
             List<string> tradeCodes = new List<string>();
@@ -147,7 +125,7 @@ namespace UWPGenerator
             // Get first letter of each base (e.g., "N A R")
             string UWPBases = string.Join(" ", starport.Bases.Select(f => f.ToString()[..1]));
 
-            // Join trade codes with semicolons (e.g., "Ag; Ri; Hi")
+            // Join trade codes (e.g., "Ag Ri Hi")
             string UWPTradeCodes = string.Join(" ", tradeCodes.Select(f => f.ToString()));
 
             // Capitalize first letter of travelCode (e.g., "A")

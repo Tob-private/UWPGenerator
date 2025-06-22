@@ -1036,5 +1036,32 @@ namespace UWPGenerator
             techLevel = Services.RollDice() + techLevelMod;
             return Math.Min(30, Math.Max(0, techLevel));
         }
+        public static string TravelCode(int atmosphere, int government, int lawLevel)
+        {
+            string travelCode = "", travelCodesPrompt;
+
+            if (atmosphere >= 10 && (government == 0 || government == 7 || government == 10) && (lawLevel == 0 || lawLevel >= 9))
+            {
+                Console.WriteLine("Your world has relatively extreme characteristics. Consider it for Amber travel code status");
+            }
+            do
+            {
+                Console.Write("Would you like there do be a travel code? (y/n) --- ");
+                travelCodesPrompt = Console.ReadLine()?.Trim().ToLower() ?? "";
+                Console.WriteLine("");
+            } while (travelCodesPrompt != "y" && travelCodesPrompt != "n");
+
+            if (travelCodesPrompt == "y")
+            {
+                //Ask user for which travel code they want (amber/red)
+                do
+                {
+                    Console.Write("Which travel code should it be? (amber/red) --- ");
+                    travelCode = Console.ReadLine()?.Trim().ToLower() ?? "";
+                    Console.WriteLine("");
+                } while (travelCode != "amber" && travelCode != "red");
+            }
+            return travelCode;
+        }
     }
 }
