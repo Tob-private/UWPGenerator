@@ -760,5 +760,164 @@ namespace UWPGenerator
         {
             return Math.Min(9, Math.Max(0, Services.RollDice(6, 2) + government));
         }
+        public static StarportModel Starport(int population)
+        {
+            int starportMod = 0;
+            List<string> starportBases = [];
+
+            if (population >= 10)
+            {
+                starportMod = 2;
+            }
+            else if (population >= 8)
+            {
+                starportMod = 1;
+            }
+            else if (population <= 2)
+            {
+                starportMod = -1;
+            }
+            else if (population <= 4)
+            {
+                starportMod = -2;
+            }
+
+            int starportNumber = Services.RollDice(6, 2) + starportMod;
+            starportNumber = Math.Min(14, Math.Max(0, starportNumber));
+            int rollForNavalBase;
+            int rollForResearchBase;
+            int rollForScoutBase;
+            int rollForTASBase;
+
+            string starportClass = "", starportQuality = "", berthingCost = "", starportFuel = "";
+            List<string> starportFacilities = [];
+            switch (starportNumber)
+            {
+                case 0:
+                case 1:
+                case 2:
+                    starportClass = "X";
+                    starportQuality = "No Starport";
+                    berthingCost = "None";
+                    starportFacilities.Add("None");
+                    break;
+                case 3:
+                case 4:
+                    starportClass = "E";
+                    starportQuality = "Frontier";
+                    berthingCost = "None";
+                    starportFacilities.Add("None");
+                    break;
+                case 5:
+                case 6:
+                    starportClass = "D";
+                    starportQuality = "Poor";
+                    berthingCost = $"{Services.RollDice() * 10} Credits";
+                    starportFuel = "Unrefined";
+                    starportFacilities.Add("Limited Repair");
+
+                    rollForScoutBase = Services.RollDice(6, 2);
+                    if (rollForScoutBase >= 7)
+                    {
+                        starportBases.Add("Scout");
+                    }
+                    break;
+                case 7:
+                case 8:
+                    starportClass = "C";
+                    starportQuality = "Routine";
+                    berthingCost = $"{Services.RollDice() * 100} Credits";
+                    starportFuel = "Unrefined";
+                    starportFacilities.Add("Shipyard (small craft)");
+                    starportFacilities.Add("Repair");
+
+                    rollForScoutBase = Services.RollDice(6, 2);
+                    if (rollForScoutBase >= 8)
+                    {
+                        starportBases.Add("Scout");
+                    }
+                    rollForResearchBase = Services.RollDice(6, 2);
+                    if (rollForResearchBase >= 10)
+                    {
+                        starportBases.Add("Research");
+                    }
+                    // Add starport bases
+                    rollForTASBase = Services.RollDice(6, 2);
+                    if (rollForTASBase >= 10)
+                    {
+                        starportBases.Add("TAS");
+                    }
+                    break;
+                case 9:
+                case 10:
+                    starportClass = "B";
+                    starportQuality = "Good";
+                    berthingCost = $"{Services.RollDice() * 500} Credits";
+                    starportFuel = "Refined";
+                    starportFacilities.Add("Shipyard (space craft)");
+                    starportFacilities.Add("Repair");
+
+                    rollForNavalBase = Services.RollDice(6, 2);
+                    if (rollForNavalBase >= 8)
+                    {
+                        starportBases.Add("Naval");
+                    }
+                    rollForScoutBase = Services.RollDice(6, 2);
+                    if (rollForScoutBase >= 8)
+                    {
+                        starportBases.Add("Scout");
+                    }
+                    rollForResearchBase = Services.RollDice(6, 2);
+                    if (rollForResearchBase >= 10)
+                    {
+                        starportBases.Add("Research");
+                    }
+                    starportBases.Add("TAS");
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                    starportClass = "A";
+                    starportQuality = "Excellent";
+                    berthingCost = $"{Services.RollDice() * 1000} Credits";
+                    starportFuel = "Refined";
+                    starportFacilities.Add("Shipyard (all)");
+                    starportFacilities.Add("Repair");
+
+                    rollForNavalBase = Services.RollDice(6, 2);
+                    if (rollForNavalBase >= 8)
+                    {
+                        starportBases.Add("Naval");
+                    }
+                    rollForScoutBase = Services.RollDice(6, 2);
+                    if (rollForScoutBase >= 10)
+                    {
+                        starportBases.Add("Scout");
+                    }
+                    rollForResearchBase = Services.RollDice(6, 2);
+                    if (rollForResearchBase >= 8)
+                    {
+                        starportBases.Add("Research");
+                    }
+                    starportBases.Add("TAS");
+                    break;
+                default:
+                    throw new Exception("Couldnt set starport" + starportNumber);
+            }
+
+            StarportModel starport = new()
+            {
+                Class = starportClass,
+                Number = starportNumber,
+                Quality = starportQuality,
+                BerthingCost = berthingCost,
+                Fuel = starportFuel,
+                Facilities = starportFacilities,
+                Bases = starportBases
+            };
+
+            return starport;
+        }
     }
 }

@@ -10,8 +10,7 @@ namespace UWPGenerator.models
         public required GovernmentModel Government { get; set; }
         public required string Culture { get; set; }
         public required int LawLevel { get; set; }
-        public required int Starport { get; set; }
-        public required List<string> StarportBases { get; set; }
+        public required StarportModel Starport { get; set; }
         public required int TechLevel { get; set; }
         public required string TravelCode { get; set; }
         public required List<string> TradeCodes { get; set; }
@@ -34,12 +33,16 @@ UWP String: {UWPString}
 = Population: 
 -{Population}
 
-Government: 
+= Government: 
 -{Government}
 
-Law Level: {LawLevel}
-Starport: {Starport}
-Starport Bases: {string.Join("; ", StarportBases.Select(f => f.ToString()))}
+= Law Level: {LawLevel}
+
+= Starport: 
+-{Starport}
+
+Starport Bases: {string.Join("; ", Starport.Bases.Select(f => f.ToString()))}
+
 Tech Level: {TechLevel}
 Travel Code: {TravelCode}
 Trade Codes: {string.Join("; ", TradeCodes.Select(f => f.ToString()))}

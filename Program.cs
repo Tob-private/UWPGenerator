@@ -39,108 +39,13 @@ namespace UWPGenerator
 
 
             // Calculate starport
-            int starportMod = 0, starport = 0;
-            List<string> starportBases = new List<string>();
-
-            if (population.Number >= 10)
-            {
-                starportMod = 2;
-            }
-            else if (population.Number >= 8)
-            {
-                starportMod = 1;
-            }
-            else if (population.Number <= 2)
-            {
-                starportMod = -1;
-            }
-            else if (population.Number <= 4)
-            {
-                starportMod = -2;
-            }
-
-            starport = Services.RollDice(6, 2) + starportMod;
-            starport = Math.Min(14, Math.Max(0, starport));
-
-            // Add starport bases
-            int rollForNavalBase = 0, rollForResearchBase = 0, rollForScoutBase = 0, rollForTASBase = 0;
-            switch (starport)
-            {
-                case 5:
-                case 6:
-                    rollForScoutBase = Services.RollDice(6, 2);
-                    if (rollForScoutBase >= 7)
-                    {
-                        starportBases.Add("Scout");
-                    }
-                    break;
-                case 7:
-                case 8:
-                    rollForScoutBase = Services.RollDice(6, 2);
-                    if (rollForScoutBase >= 8)
-                    {
-                        starportBases.Add("Scout");
-                    }
-                    rollForResearchBase = Services.RollDice(6, 2);
-                    if (rollForResearchBase >= 10)
-                    {
-                        starportBases.Add("Research");
-                    }
-                    rollForTASBase = Services.RollDice(6, 2);
-                    if (rollForTASBase >= 10)
-                    {
-                        starportBases.Add("TAS");
-                    }
-                    break;
-                case 9:
-                case 10:
-                    rollForNavalBase = Services.RollDice(6, 2);
-                    if (rollForNavalBase >= 8)
-                    {
-                        starportBases.Add("Naval");
-                    }
-                    rollForScoutBase = Services.RollDice(6, 2);
-                    if (rollForScoutBase >= 8)
-                    {
-                        starportBases.Add("Scout");
-                    }
-                    rollForResearchBase = Services.RollDice(6, 2);
-                    if (rollForResearchBase >= 10)
-                    {
-                        starportBases.Add("Research");
-                    }
-                    starportBases.Add("TAS");
-                    break;
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                    rollForNavalBase = Services.RollDice(6, 2);
-                    if (rollForNavalBase >= 8)
-                    {
-                        starportBases.Add("Naval");
-                    }
-                    rollForScoutBase = Services.RollDice(6, 2);
-                    if (rollForScoutBase >= 10)
-                    {
-                        starportBases.Add("Scout");
-                    }
-                    rollForResearchBase = Services.RollDice(6, 2);
-                    if (rollForResearchBase >= 8)
-                    {
-                        starportBases.Add("Research");
-                    }
-                    starportBases.Add("TAS");
-                    break;
-                default:
-                    break;
-            }
+            StarportModel starport = Characteristics.Starport(population.Number);
 
             // Calculate tech level
             int techLevel = 0, techLevelMod = 0;
 
             // Add tech level mods based on all previous characteristics
-            switch (starport)
+            switch (starport.Number)
             {
                 case 10:
                     techLevelMod += 6;
@@ -347,34 +252,8 @@ namespace UWPGenerator
                 tradeCodes.Add("Wa");
             }
 
-            string starportClass = "";
-            if (starport <= 2)
-            {
-                starportClass = "X";
-            }
-            else if (starport <= 4)
-            {
-                starportClass = "E";
-            }
-            else if (starport <= 6)
-            {
-                starportClass = "D";
-            }
-            else if (starport <= 8)
-            {
-                starportClass = "C";
-            }
-            else if (starport <= 10)
-            {
-                starportClass = "B";
-            }
-            else if (starport >= 11)
-            {
-                starportClass = "A";
-            }
-
             // Get first letter of each base (e.g., "N A R")
-            string UWPBases = string.Join(" ", starportBases.Select(f => f.ToString()[..1]));
+            string UWPBases = string.Join(" ", starport.Bases.Select(f => f.ToString()[..1]));
 
             // Join trade codes with semicolons (e.g., "Ag; Ri; Hi")
             string UWPTradeCodes = string.Join(" ", tradeCodes.Select(f => f.ToString()));
@@ -385,7 +264,7 @@ namespace UWPGenerator
                 : "";
 
 
-            string UWPString = $"{planetName}   0101    {starportClass}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government.Class}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}   0101    {starport.Class}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government.Class}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {
@@ -398,7 +277,6 @@ namespace UWPGenerator
                 Culture = government.Culture,
                 LawLevel = lawLevel,
                 Starport = starport,
-                StarportBases = starportBases,
                 TechLevel = techLevel,
                 TravelCode = travelCode,
                 TradeCodes = tradeCodes,
