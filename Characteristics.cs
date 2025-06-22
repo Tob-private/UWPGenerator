@@ -409,7 +409,6 @@ namespace UWPGenerator
 
             return hydrographics;
         }
-
         public static PopulationModel Population()
         {
             int populationNumber = Math.Max(0, Math.Min(Services.RollDice(6, 2) - 2, 12));
@@ -501,7 +500,6 @@ namespace UWPGenerator
 
             return population;
         }
-
         public static GovernmentModel Government(int population)
         {
             int governmentNumber = Services.RollDice(6, 2) - 7 + population;
@@ -757,6 +755,10 @@ namespace UWPGenerator
             };
 
             return government;
+        }
+        public static int LawLevel(int government)
+        {
+            return Math.Min(9, Math.Max(0, Services.RollDice(6, 2) + government));
         }
     }
 }

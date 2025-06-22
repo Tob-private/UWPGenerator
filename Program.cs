@@ -35,8 +35,7 @@ namespace UWPGenerator
 
 
             // Calculate law level
-            int lawLevel = Services.RollDice(6, 2) - 7 + government.Number;
-            lawLevel = Math.Min(20, Math.Max(0, lawLevel));
+           int lawLevel = Characteristics.LawLevel(government.Number);
 
 
             // Calculate starport
