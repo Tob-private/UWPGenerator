@@ -92,103 +92,86 @@ namespace UWPGenerator
             string? unusualAtmosphereType = null;
             string atmosphereComposition;
             string atmospherePressure;
-            string atmosphereClass;
             string gearRequired;
 
             switch (atmosphereNumber)
             {
                 case 0:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "None";
                     atmospherePressure = "0.00";
                     gearRequired = "Vacc Suit";
                     break;
                 case 1:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Trace";
                     atmospherePressure = $"{Math.Round(0.001 + (random.NextDouble() * (0.09 - 0.001)), 2)}";
                     gearRequired = "Vacc Suit";
                     break;
                 case 2:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Very Thin, Tainted";
                     atmospherePressure = $"{Math.Round(0.1 + (random.NextDouble() * (0.42 - 0.1)), 2)}";
                     gearRequired = "Respirator, Filter";
                     break;
                 case 3:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Very Thin";
                     atmospherePressure = $"{Math.Round(0.1 + (random.NextDouble() * (0.42 - 0.1)), 2)}";
                     gearRequired = "Respirator";
                     break;
                 case 4:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Thin, Tainted";
                     atmospherePressure = $"{Math.Round(0.43 + (random.NextDouble() * (0.7 - 0.43)), 2)}";
                     gearRequired = "Filter";
                     break;
                 case 5:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Thin";
                     atmospherePressure = $"{Math.Round(0.43 + (random.NextDouble() * (0.7 - 0.43)), 2)}";
                     gearRequired = "";
                     break;
                 case 6:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Standard";
                     atmospherePressure = $"{Math.Round(0.71 + (random.NextDouble() * (1.49 - 0.71)), 2)}";
                     gearRequired = "";
                     break;
                 case 7:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Standard, Tainted";
                     atmospherePressure = $"{Math.Round(0.71 + (random.NextDouble() * (1.49 - 0.71)), 2)}";
                     gearRequired = "Filter";
                     break;
                 case 8:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Dense";
                     atmospherePressure = $"{Math.Round(1.5 + (random.NextDouble() * (1.5 - 2.49)), 2)}";
                     gearRequired = "";
                     break;
                 case 9:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Dense, Tainted";
                     atmospherePressure = $"{Math.Round(1.5 + (random.NextDouble() * (1.5 - 2.49)), 2)}";
                     gearRequired = "Filter";
                     break;
                 case 10:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Exotic";
                     atmospherePressure = "Varies";
                     gearRequired = "Air Supply";
                     break;
                 case 11:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Corrosive";
                     atmospherePressure = "Varies";
                     gearRequired = "Vacc Suit";
                     break;
                 case 12:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Insidious";
                     atmospherePressure = "Varies";
                     gearRequired = "Vacc Suit";
                     break;
                 case 13:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Dense, Tainted";
                     atmospherePressure = $"{Math.Round(2.5 + (random.NextDouble() * (2.5 - 10.0)), 2)}";
                     gearRequired = "";
                     break;
                 case 14:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Low";
                     atmospherePressure = $"{Math.Round(0 + (random.NextDouble() * (.5 - 0)), 2)}";
                     gearRequired = "";
                     break;
                 case 15:
-                    atmosphereClass = $"{atmosphereNumber:x}";
                     atmosphereComposition = "Unusual";
                     atmospherePressure = "Varies";
                     gearRequired = "Varies";
@@ -207,7 +190,7 @@ namespace UWPGenerator
 
             AtmosphereModel atmosphere = new()
             {
-                Class = atmosphereClass,
+                Class = $"{atmosphereNumber:X}",
                 Number = atmosphereNumber,
                 Composition = atmosphereComposition,
                 UnusualAtmosphereType = unusualAtmosphereType,
@@ -401,7 +384,7 @@ namespace UWPGenerator
 
             HydroGraphicsModel hydrographics = new()
             {
-                Class = $"{hydrographicsNumber:x}",
+                Class = $"{hydrographicsNumber:X}",
                 Number = hydrographicsNumber,
                 Percentage = percentage,
                 Description = description,
@@ -491,7 +474,7 @@ namespace UWPGenerator
 
             PopulationModel population = new()
             {
-                Class = $"{populationNumber:x}",
+                Class = $"{populationNumber:X}",
                 Number = populationNumber,
                 InhabitantsAmount = inhabitantsAmount,
                 TotalPopulation = totalPopulation,
@@ -746,7 +729,7 @@ namespace UWPGenerator
 
             GovernmentModel government = new()
             {
-                Class = $"{governmentNumber:x}",
+                Class = $"{governmentNumber:X}",
                 Number = governmentNumber,
                 Type = type,
                 Description = description,
