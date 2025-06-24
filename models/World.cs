@@ -84,7 +84,7 @@ UWP String: {UWPString}
 ### 🏛️ Government
 - **Class:** {Government.Class}
 - **Type:** {Government.Type}
-  > {Government.Description}
+  > *{Government.Description}*
 - **Contraband:** {string.Join("; ", Government.Contraband.Select(f => f.ToString()))}
 - **Culture:** {Government.Culture}
 #### 🛡️ Factions
