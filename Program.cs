@@ -65,6 +65,7 @@ namespace UWPGenerator
 
             World world = new()
             {
+                WorldName = planetName,
                 UWPString = UWPString,
                 Size = size,
                 Atmosphere = atmosphere,
@@ -85,10 +86,24 @@ namespace UWPGenerator
 
         static void Main()
         {
-            var world = GenerateWorld();
+            string format = "";
+            do
+            {
+                Console.Write("What format would you like to have? (string/md) --- ");
+                format = Console.ReadLine()?.Trim().ToLower() ?? "";
+                Console.WriteLine("");
+            } while (format != "string" && format != "md");
+            World world = GenerateWorld();
 
             Console.WriteLine("This is you newly created world:");
-            Console.WriteLine(world);
+            if (format == "string")
+            {
+                Console.WriteLine(world.ToString());
+            }
+            else if (format == "md")
+            {
+                Console.WriteLine(world.ToMarkdown());
+            }
         }
     }
 

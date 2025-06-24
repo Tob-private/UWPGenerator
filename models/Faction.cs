@@ -18,5 +18,16 @@ namespace UWPGenerator.models
 ---- Strength: {StrengthNumber} ({StrengthDesc})
 ---- Contraband: {string.Join("; ", Contraband.Select(f => f.ToString()))}";
         }
+
+        public string ToMarkdown()
+        {
+             return $@"
+          
+- **Faction #{Index}**
+  - **Governing Type:** {Type} 
+    > *{TypeDesc}*
+  - **Strength:** {StrengthNumber} ({StrengthDesc})
+  - **Contraband:** *{string.Join("; ", Contraband.Select(f => f.ToString()))}*";
+        }
     }
 }
