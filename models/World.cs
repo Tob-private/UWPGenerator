@@ -56,7 +56,6 @@ UWP String: {UWPString}
 **UWP String:** `{UWPString}`
 
 ---
-
 ## 🪐 Planetary Profile
 
 ### 🧱 Size
