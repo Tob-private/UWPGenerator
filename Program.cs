@@ -15,6 +15,10 @@ namespace UWPGenerator
             // Give planet a name
             string planetName = Services.RandomizePlanetName();
 
+            // Planet Coordinate
+            Console.WriteLine("What coordinate does the world have?");
+            string planetCoords = Console.ReadLine() ?? "0101";
+
             // Calculate planet size
             SizeModel size = Characteristics.Size();
 
@@ -60,8 +64,9 @@ namespace UWPGenerator
                 ? char.ToUpper(travelCode[0]).ToString()
                 : "";
 
+    
 
-            string UWPString = $"{planetName}  0101  {starport.Class}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government.Class}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
+            string UWPString = $"{planetName}  {planetCoords}  {starport.Class}{size.Class}{atmosphere.Class}{hydrographics.Class}{population.Class}{government.Class}{lawLevel:X}-{techLevel:X} {UWPBases}  {UWPTradeCodes}  {UWPTravelCode}";
 
             World world = new()
             {
@@ -86,7 +91,7 @@ namespace UWPGenerator
 
         static void Main()
         {
-            string format = "";
+            string format;
             do
             {
                 Console.Write("What format would you like to have? (string/md) --- ");
